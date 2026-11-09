@@ -1,0 +1,1151 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+</head>
+<body>
+<title>Nội lực và Ngoại lực</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: app shell — lesson map rail on the left, one "trang" (screen) at a time on a stone-paper stage; geology cross-section motifs. */
+:root{
+  --paper:#EFF2EE; --paper-2:#E2E7E1; --card:#FFFFFF; --ink:#1B2330; --ink-2:#4B5565; --line:#C8D0C7;
+  --magma:#C9431B; --magma-soft:#FBE2D7; --river:#12687C; --river-soft:#D3EBEF; --ochre:#A97A12; --ochre-soft:#F4E9CB;
+  --good:#2C7D3F; --good-soft:#DDF1E1; --bad:#B83227; --bad-soft:#F8DEDA;
+  --sky:#D9EAF2; --crust:#8D7A58; --crust-2:#A9966F; --stone:#6C6861; --mantle:#E98A4B; --core:#F3C35B;
+  --shadow:0 1px 2px rgba(27,35,48,.06),0 6px 20px rgba(27,35,48,.07);
+  --f-display:"Barlow Condensed","Be Vietnam Pro","Arial Narrow",sans-serif;
+  --f-body:"Be Vietnam Pro","Segoe UI",Roboto,Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#11161D; --paper-2:#19202A; --card:#1D2530; --ink:#E8EDF3; --ink-2:#A6B1C0; --line:#2F3946;
+  --magma:#FF7B4E; --magma-soft:#3B2119; --river:#53C4DA; --river-soft:#15303A; --ochre:#E3B54C; --ochre-soft:#3A2F17;
+  --good:#5FCB7C; --good-soft:#173322; --bad:#FF6D5E; --bad-soft:#3D1D1A;
+  --sky:#1A2836; --crust:#6E5E44; --crust-2:#857353; --stone:#A29D94; --mantle:#C9622F; --core:#E3A93D;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.3); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#11161D; --paper-2:#19202A; --card:#1D2530; --ink:#E8EDF3; --ink-2:#A6B1C0; --line:#2F3946;
+  --magma:#FF7B4E; --magma-soft:#3B2119; --river:#53C4DA; --river-soft:#15303A; --ochre:#E3B54C; --ochre-soft:#3A2F17;
+  --good:#5FCB7C; --good-soft:#173322; --bad:#FF6D5E; --bad-soft:#3D1D1A;
+  --sky:#1A2836; --crust:#6E5E44; --crust-2:#857353; --stone:#A29D94; --mantle:#C9622F; --core:#E3A93D;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.3); color-scheme:dark}
+
+html,body{height:100%}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55;overflow:hidden}
+*{box-sizing:border-box}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--ochre);outline-offset:2px;border-radius:6px}
+
+.app{height:100%;display:grid;grid-template-rows:auto minmax(0,1fr) auto;grid-template-columns:minmax(0,1fr);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+/* top bar */
+.top{display:flex;align-items:center;gap:12px;padding-block:10px;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:10px;min-width:0;flex:1}
+.strata{width:30px;height:30px;border-radius:7px;flex:none;background:linear-gradient(180deg,var(--river) 0 22%,var(--crust-2) 22% 44%,var(--crust) 44% 64%,var(--mantle) 64% 84%,var(--magma) 84%)}
+.brand-t{min-width:0}
+.brand-t b{display:block;font-family:var(--f-display);font-weight:700;font-size:20px;letter-spacing:.02em;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand-t span{display:block;font-size:12px;color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tools{display:flex;gap:6px;flex:none}
+.ibtn{display:inline-flex;align-items:center;gap:6px;height:38px;padding:0 10px;border-radius:10px;border:1px solid var(--line);background:var(--card);cursor:pointer;font-size:13px;font-weight:600}
+.ibtn svg{width:18px;height:18px;flex:none}
+.ibtn[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.ibtn .lbl{white-space:nowrap}
+.menu-btn{display:none}
+
+/* body */
+.main{display:grid;grid-template-columns:250px minmax(0,1fr);min-height:0;gap:20px}
+.rail{overflow-y:auto;padding-block:16px;border-right:1px solid var(--line);padding-right:12px}
+.prog{height:6px;border-radius:3px;background:var(--paper-2);overflow:hidden;margin-bottom:6px}
+.prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--magma),var(--ochre),var(--river));transition:width .5s}
+.prog-t{font-size:12px;color:var(--ink-2);margin-bottom:14px}
+.rail h4{margin:14px 0 6px;font-family:var(--f-display);font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2);font-weight:600}
+.rail ol{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+.rail button{width:100%;display:flex;align-items:center;gap:10px;text-align:left;padding:7px 8px;border-radius:9px;border:0;background:none;cursor:pointer;font-size:14px;line-height:1.3}
+.rail button:hover{background:var(--paper-2)}
+.rail button[aria-current="true"]{background:var(--card);box-shadow:var(--shadow);font-weight:600}
+.rail .dot{width:22px;height:22px;border-radius:50%;flex:none;display:grid;place-items:center;font-size:11px;font-weight:700;border:1.5px solid var(--line);color:var(--ink-2);font-variant-numeric:tabular-nums}
+.rail button.seen .dot{border-color:var(--ink-2)}
+.rail button.done .dot{background:var(--good);border-color:var(--good);color:var(--card)}
+
+.stage{overflow-y:auto;min-height:0;padding-block:22px 40px;scroll-behavior:smooth}
+.slide{max-width:1080px;margin:0 auto}
+.slide.enter{animation:slideIn .45s cubic-bezier(.2,.7,.2,1)}
+@keyframes slideIn{from{opacity:.0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.slide.enter .rise{animation:rise .55s cubic-bezier(.2,.7,.2,1) backwards}
+.slide.enter .rise:nth-child(2){animation-delay:.08s}.slide.enter .rise:nth-child(3){animation-delay:.16s}.slide.enter .rise:nth-child(4){animation-delay:.24s}
+@keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+/* bottom bar */
+.foot{display:flex;align-items:center;gap:10px;padding-block:10px;border-top:1px solid var(--line)}
+.foot .spacer{flex:1;min-width:0;font-size:13px;color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center}
+
+/* type */
+.eyebrow{font-family:var(--f-display);font-weight:600;font-size:14px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2);margin:0 0 6px}
+.eyebrow.m{color:var(--magma)}.eyebrow.r{color:var(--river)}.eyebrow.o{color:var(--ochre)}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.05}
+h2{font-size:clamp(32px,4.4vw,48px);font-weight:700;letter-spacing:.005em}
+h3{font-size:24px;font-weight:700}
+.lead{font-size:18px;color:var(--ink-2);max-width:62ch;margin:10px 0 0}
+p{margin:0}
+.t-magma{color:var(--magma)}.t-river{color:var(--river)}.t-ochre{color:var(--ochre)}
+.head{margin-bottom:22px}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:42px;padding:0 18px;border-radius:11px;border:1.5px solid var(--ink);background:var(--card);cursor:pointer;font-weight:600;font-size:15px;transition:transform .12s, background .2s}
+.btn:active{transform:scale(.97)}
+.btn.primary{background:var(--ink);color:var(--paper)}
+.btn.ghost{border-color:var(--line)}
+.btn.lg{min-height:52px;padding:0 24px;font-size:17px}
+.btn.magma{background:var(--magma);border-color:var(--magma);color:#fff}
+.btn.river{background:var(--river);border-color:var(--river);color:var(--card)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn svg{width:18px;height:18px}
+
+/* generic blocks */
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:var(--shadow);min-width:0}
+.panel h3{margin-bottom:10px}
+.task{border:1.5px dashed var(--line);border-radius:16px;padding:20px;margin-top:22px}
+.task-h{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 12px;margin-bottom:12px}
+.tag{display:inline-block;font-family:var(--f-display);font-weight:700;font-size:13px;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border-radius:6px;background:var(--ochre-soft);color:var(--ochre)}
+.tag.m{background:var(--magma-soft);color:var(--magma)}.tag.r{background:var(--river-soft);color:var(--river)}
+.hint{font-size:14px;color:var(--ink-2)}
+ul.clean{margin:0;padding-left:20px;display:grid;gap:6px}
+.callout{border-left:4px solid var(--ochre);background:var(--ochre-soft);padding:14px 16px;border-radius:0 12px 12px 0;margin-top:16px}
+.callout.m{border-color:var(--magma);background:var(--magma-soft)}.callout.r{border-color:var(--river);background:var(--river-soft)}
+details.note{margin-top:18px;border:1px solid var(--line);border-radius:14px;background:var(--card);overflow:hidden}
+details.note summary{cursor:pointer;padding:14px 18px;font-weight:600;list-style:none;display:flex;align-items:center;gap:10px}
+details.note summary::-webkit-details-marker{display:none}
+details.note summary::before{content:"";width:9px;height:9px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(-45deg);transition:transform .2s}
+details.note[open] summary::before{transform:rotate(45deg)}
+details.note .nbody{padding:0 18px 18px}
+.tbl-wrap{overflow-x:auto}
+table.kb{border-collapse:collapse;width:100%;font-size:15px}
+table.kb th,table.kb td{border:1px solid var(--line);padding:10px 12px;text-align:left;vertical-align:top}
+table.kb th{background:var(--paper-2);font-weight:600;width:28%}
+table.kb thead th{font-family:var(--f-display);letter-spacing:.06em;text-transform:uppercase;font-size:15px}
+
+/* cover */
+.cover-grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:28px;align-items:center;min-height:min(560px,70vh)}
+.cover-title{font-size:clamp(50px,7vw,96px);font-weight:800;line-height:.92;letter-spacing:-.005em;text-transform:uppercase}
+.cover-title .amp{display:block;font-size:.42em;color:var(--ink-2);font-weight:600;letter-spacing:.2em;margin:.18em 0}
+.cover-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
+.meta{display:grid;grid-template-columns:repeat(3,auto);justify-content:start;gap:4px 26px;margin:28px 0 0;font-size:14px}
+.meta dt{font-family:var(--f-display);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2)}
+.meta dd{margin:0;font-weight:600}
+.cover-fig{margin:0;min-width:0}
+.cover-fig svg{width:100%;height:auto;display:block}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes flow{to{stroke-dashoffset:-40}}
+@keyframes fall{from{transform:translateY(-6px);opacity:0}30%{opacity:1}to{transform:translateY(26px);opacity:0}}
+@keyframes bob{50%{transform:translateY(-6px)}}
+.sunrays{transform-origin:520px 62px;animation:spin 30s linear infinite}
+.conv{stroke-dasharray:10 10;animation:flow 1.6s linear infinite}
+.drop{animation:fall 1.2s linear infinite}
+.arrow-up{animation:bob 2.4s ease-in-out infinite}
+
+/* objective cards */
+.obj{display:grid;gap:10px}
+.obj .k{font-family:var(--f-display);font-size:30px;font-weight:800;line-height:1}
+.obj li{font-size:15px}
+
+/* sorter */
+.pool{display:flex;flex-wrap:wrap;gap:10px;min-height:56px;padding:12px;border-radius:14px;background:var(--paper-2);margin-bottom:14px}
+.pool:empty::after{content:"Đã xếp hết thẻ — bấm Kiểm tra";color:var(--ink-2);font-size:14px;align-self:center}
+.bins{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.bin{border:2px dashed var(--line);border-radius:16px;padding:12px;min-height:150px;cursor:pointer;transition:border-color .2s,background .2s}
+.bin.hot{border-color:var(--ochre);background:var(--ochre-soft)}
+.bin-h{font-family:var(--f-display);font-weight:700;font-size:20px;letter-spacing:.04em;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.bin-h::before{content:"";width:12px;height:12px;border-radius:3px;background:var(--ink-2)}
+.bin.m .bin-h{color:var(--magma)}.bin.m .bin-h::before{background:var(--magma)}
+.bin.r .bin-h{color:var(--river)}.bin.r .bin-h::before{background:var(--river)}
+.bin.o .bin-h{color:var(--ochre)}.bin.o .bin-h::before{background:var(--ochre)}
+.bin-body{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1.5px solid var(--line);background:var(--card);border-radius:11px;padding:9px 13px;cursor:grab;font-size:15px;font-weight:500;text-align:left;line-height:1.3;box-shadow:var(--shadow);transition:transform .15s,border-color .15s,background .2s}
+.chip:hover{transform:translateY(-2px)}
+.chip.sel{border-color:var(--ochre);background:var(--ochre-soft);transform:translateY(-2px) scale(1.02)}
+.chip.ok{border-color:var(--good);background:var(--good-soft)}
+.chip.no{border-color:var(--bad);background:var(--bad-soft);animation:shake .4s}
+@keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.ex-actions{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:16px}
+.ex-msg{font-weight:600}
+.ex-msg.good{color:var(--good)}.ex-msg.bad{color:var(--bad)}
+.stars{color:var(--ochre);letter-spacing:2px}
+
+/* earth figure */
+.earth svg{width:100%;height:auto;display:block}
+.hot-pt{cursor:pointer}
+.hot-pt circle.ring{transition:r .2s}
+.hot-pt.on circle.ring{stroke-width:4}
+.origins{display:grid;gap:10px}
+.origin{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;text-align:left;padding:12px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--card);cursor:pointer}
+.origin .n{grid-row:span 2;width:30px;height:30px;border-radius:50%;background:var(--magma-soft);color:var(--magma);display:grid;place-items:center;font-weight:700;font-family:var(--f-display);font-size:17px}
+.origin b{font-size:16px}
+.origin span{font-size:14px;color:var(--ink-2);display:none}
+.origin.on{border-color:var(--magma)}
+.origin.on span{display:block}
+.origin.on .n{background:var(--magma);color:#fff}
+.def{font-size:19px;line-height:1.5}
+.def mark{background:var(--magma-soft);color:var(--ink);padding:0 4px;border-radius:4px}
+
+/* fill blanks */
+.fill{font-size:18px;line-height:2.3}
+.blank{display:inline-flex;align-items:center;justify-content:center;min-width:120px;min-height:38px;padding:0 10px;margin:0 3px;border-radius:9px;border:2px dashed var(--line);background:var(--paper-2);cursor:pointer;font-weight:600;vertical-align:middle;line-height:1.2}
+.blank.cur{border-color:var(--ochre);border-style:solid}
+.blank.filled{border-style:solid;background:var(--card)}
+.blank.ok{border-color:var(--good);background:var(--good-soft)}
+.blank.no{border-color:var(--bad);background:var(--bad-soft)}
+.bank{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;padding:12px;border-radius:14px;background:var(--paper-2)}
+.bank .chip.used{opacity:.3;pointer-events:none}
+
+/* simulator */
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.tab{padding:9px 14px;border-radius:10px;border:1.5px solid var(--line);background:var(--card);cursor:pointer;font-weight:600;font-size:15px}
+.tab[aria-selected="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.sim{border-radius:16px;overflow:hidden;border:1px solid var(--line);background:var(--sky)}
+.sim svg{display:block;width:100%;height:auto}
+.sim-ctl{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:12px;margin-top:14px}
+.sim-ctl label{font-weight:600;font-size:14px;color:var(--ink-2)}
+input[type=range]{width:100%;accent-color:var(--magma);height:28px}
+.readout{margin-top:12px;font-size:17px;font-weight:600;min-height:28px}
+.sub-tabs{display:flex;gap:6px;margin-top:10px}
+
+/* flip cards */
+.flips{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px}
+.flip{perspective:1000px;cursor:pointer;border:0;background:none;padding:0;text-align:left}
+.flip-in{display:grid;transition:transform .6s cubic-bezier(.3,.7,.2,1);transform-style:preserve-3d}
+.flip.on .flip-in{transform:rotateY(180deg)}
+.face{grid-area:1/1;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:16px;padding:20px;min-height:190px;display:flex;flex-direction:column;gap:10px;border:1px solid var(--line)}
+.face.front{background:var(--card);box-shadow:var(--shadow)}
+.face.back{background:var(--river);color:var(--card);transform:rotateY(180deg);border-color:var(--river)}
+.face .qn{font-family:var(--f-display);font-weight:800;font-size:34px;line-height:1;color:var(--river)}
+.face.back .qn{color:inherit;opacity:.7}
+.face p{font-size:17px;font-weight:500}
+.face .tap{margin-top:auto;font-size:13px;color:var(--ink-2)}
+.face.back .tap{color:inherit;opacity:.8}
+
+/* choice rows */
+.crow{display:grid;grid-template-columns:150px minmax(0,1fr);gap:12px;align-items:start;padding:14px 0;border-bottom:1px solid var(--line)}
+.crow:last-child{border-bottom:0}
+.crow .rl{font-family:var(--f-display);font-weight:700;font-size:20px;text-transform:uppercase;letter-spacing:.04em;color:var(--river);padding-top:6px}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opt{border:1.5px solid var(--line);background:var(--card);border-radius:11px;padding:9px 13px;cursor:pointer;font-size:15px;text-align:left;line-height:1.35}
+.opt[aria-pressed="true"]{border-color:var(--river);background:var(--river-soft);font-weight:600}
+.opt.ok{border-color:var(--good);background:var(--good-soft)}
+.opt.no{border-color:var(--bad);background:var(--bad-soft)}
+
+/* erosion */
+.ero{border-radius:16px;overflow:hidden;border:1px solid var(--line);background:var(--sky)}
+.ero canvas{display:block;width:100%;height:auto;aspect-ratio:2/1}
+.stage-tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:14px}
+.stab{position:relative;padding:12px 10px;border-radius:12px;border:1.5px solid var(--line);background:var(--card);cursor:pointer;font-weight:700;font-family:var(--f-display);font-size:19px;letter-spacing:.03em;text-transform:uppercase}
+.stab small{display:block;font-family:var(--f-body);font-weight:500;font-size:12px;text-transform:none;letter-spacing:0;color:var(--ink-2)}
+.stab[aria-selected="true"]{border-color:var(--ochre);background:var(--ochre-soft)}
+.stab:not(:last-child)::after{content:"";position:absolute;right:-8px;top:50%;width:8px;height:2px;background:var(--line)}
+.pinfo{margin-top:14px}
+.pinfo h3{display:flex;align-items:center;gap:10px}
+.weather3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:12px}
+.weather3 > div{border-radius:12px;padding:14px;background:var(--paper-2);min-width:0}
+.weather3 b{display:block;font-family:var(--f-display);font-size:18px;letter-spacing:.03em;text-transform:uppercase;margin-bottom:4px}
+.timer{display:flex;flex-wrap:wrap;align-items:center;gap:12px}
+.clock{font-family:var(--f-display);font-weight:800;font-size:46px;font-variant-numeric:tabular-nums;letter-spacing:.02em;line-height:1;min-width:120px}
+.clock.urgent{color:var(--magma)}
+
+/* order */
+.order{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.ocard{position:relative;padding:18px 14px;border-radius:14px;border:1.5px solid var(--line);background:var(--card);cursor:pointer;text-align:center;font-family:var(--f-display);font-weight:700;font-size:22px;text-transform:uppercase;letter-spacing:.03em;box-shadow:var(--shadow)}
+.ocard .num{position:absolute;top:-10px;left:-10px;width:30px;height:30px;border-radius:50%;background:var(--ochre);color:var(--card);font-size:16px;display:none;place-items:center;font-family:var(--f-body)}
+.ocard.picked .num{display:grid}
+.ocard.picked{border-color:var(--ochre)}
+.ocard.ok{border-color:var(--good);background:var(--good-soft)}
+.ocard.no{border-color:var(--bad);background:var(--bad-soft)}
+.balance svg{width:100%;height:auto;display:block;border-radius:14px}
+
+/* wheel */
+.wheel-wrap{display:grid;grid-template-columns:minmax(0,420px) minmax(0,1fr);gap:24px;align-items:start}
+.wheel{position:relative;max-width:420px;width:100%;margin:0 auto}
+.wheel canvas{width:100%;height:auto;aspect-ratio:1;display:block}
+.wheel .pin{position:absolute;left:50%;top:-4px;transform:translateX(-50%);width:0;height:0;border-left:16px solid transparent;border-right:16px solid transparent;border-top:28px solid var(--ink);filter:drop-shadow(0 2px 2px rgba(0,0,0,.25))}
+.wctl{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:14px;justify-content:center}
+.wctl input{width:80px;height:42px;border-radius:10px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);font:inherit;font-weight:600;padding:0 10px;text-align:center}
+.winner{font-family:var(--f-display);font-weight:800;font-size:64px;line-height:1;color:var(--magma);min-height:64px}
+
+/* quiz */
+.quiz{max-width:820px}
+.qtop{display:flex;justify-content:space-between;align-items:center;gap:10px;font-weight:600;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.qbar{height:8px;border-radius:4px;background:var(--paper-2);overflow:hidden;margin:10px 0 18px}
+.qbar i{display:block;height:100%;width:100%;background:var(--river);transform-origin:left}
+.qq{font-size:24px;font-weight:600;line-height:1.35;margin-bottom:16px;text-wrap:balance}
+.qopts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.qopt{display:flex;gap:12px;align-items:flex-start;text-align:left;padding:14px 16px;border-radius:14px;border:1.5px solid var(--line);background:var(--card);cursor:pointer;font-size:17px;line-height:1.35;box-shadow:var(--shadow)}
+.qopt .L{flex:none;width:30px;height:30px;border-radius:8px;display:grid;place-items:center;font-weight:700;background:var(--paper-2);font-family:var(--f-display);font-size:18px}
+.qopt:nth-child(1) .L{color:var(--magma)}.qopt:nth-child(2) .L{color:var(--river)}.qopt:nth-child(3) .L{color:var(--ochre)}.qopt:nth-child(4) .L{color:var(--good)}
+.qopt.ok{border-color:var(--good);background:var(--good-soft)}
+.qopt.no{border-color:var(--bad);background:var(--bad-soft)}
+.qopt:disabled{cursor:default}
+.qex{margin-top:16px}
+.qend{text-align:center;padding:24px 0}
+.big{font-family:var(--f-display);font-weight:800;font-size:88px;line-height:1}
+
+textarea{width:100%;min-height:120px;border-radius:12px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);font:inherit;padding:12px 14px;resize:vertical}
+.places{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:14px}
+.place{border-radius:14px;padding:14px;background:var(--paper-2);min-width:0}
+.place b{display:block;font-family:var(--f-display);font-size:20px;text-transform:uppercase;letter-spacing:.03em}
+.place small{font-size:13px;color:var(--ink-2)}
+.place.r b{color:var(--river)}.place.o b{color:var(--ochre)}
+
+.compare{width:100%;border-collapse:separate;border-spacing:0}
+.compare th,.compare td{padding:12px 14px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top;font-size:15px}
+.compare thead th{font-family:var(--f-display);font-size:22px;text-transform:uppercase;letter-spacing:.04em}
+.compare thead th:nth-child(2){color:var(--magma)}.compare thead th:nth-child(3){color:var(--river)}
+.compare tbody th{font-weight:600;color:var(--ink-2);width:20%}
+.results{display:grid;gap:8px}
+.res{display:flex;justify-content:space-between;gap:10px;padding:10px 14px;border-radius:10px;background:var(--paper-2);font-variant-numeric:tabular-nums}
+.res b{font-weight:600}
+
+.toast{position:fixed;left:50%;bottom:calc(80px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:10px;font-size:14px;font-weight:500;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:50;max-width:calc(100% - 32px)}
+.toast.show{opacity:1;transform:translateX(-50%)}
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:60;width:100%;height:100%}
+
+/* responsive */
+@media (max-width:900px){
+  .main{grid-template-columns:minmax(0,1fr)}
+  .rail{position:fixed;z-index:40;top:0;bottom:0;left:0;width:min(300px,86vw);background:var(--paper);padding:calc(16px + env(safe-area-inset-top,0px)) 14px 16px max(16px,env(safe-area-inset-left,0px));box-shadow:0 0 40px rgba(0,0,0,.25);transform:translateX(-105%);transition:transform .3s}
+  .rail.open{transform:none}
+  .menu-btn{display:inline-flex}
+  .cover-grid,.grid2,.wheel-wrap{grid-template-columns:minmax(0,1fr)}
+  .grid3{grid-template-columns:minmax(0,1fr)}
+  .places{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .ibtn .lbl{display:none}
+}
+@media (max-width:600px){
+  .qopts,.order,.weather3{grid-template-columns:minmax(0,1fr)}
+  .stage-tabs{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .stab::after{display:none}
+  .crow{grid-template-columns:minmax(0,1fr)}
+  .meta{grid-template-columns:minmax(0,1fr)}
+  .sim-ctl{grid-template-columns:minmax(0,1fr)}
+  .brand-t span{display:none}
+  .foot .spacer{display:none}
+  .foot{justify-content:space-between}
+  .places{grid-template-columns:minmax(0,1fr)}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+
+<div class="app">
+  <header class="top">
+    <button class="ibtn menu-btn" id="menuBtn" aria-label="Mục lục" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    <div class="brand"><div class="strata" aria-hidden="true"></div><div class="brand-t"><b>Bài 7 · Nội lực và ngoại lực</b><span>Địa lí 10 · Tiết 11–13 · GV Trần Thị Thái Hiền</span></div></div>
+    <div class="tools">
+      <button class="ibtn" id="sfxBtn" aria-pressed="true" title="Hiệu ứng âm thanh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg><span class="lbl">Âm thanh</span></button>
+      <button class="ibtn" id="musicBtn" aria-pressed="false" title="Nhạc nền"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></svg><span class="lbl">Nhạc nền</span></button>
+      <button class="ibtn" id="autoBtn" aria-pressed="false" title="Tự động đọc mỗi trang"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg><span class="lbl">Tự đọc</span></button>
+      <button class="ibtn" id="fsBtn" title="Toàn màn hình"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg><span class="lbl">Toàn màn hình</span></button>
+    </div>
+  </header>
+
+  <div class="main">
+    <nav class="rail" id="rail" aria-label="Mục lục bài học">
+      <div class="prog"><i id="progBar"></i></div>
+      <div class="prog-t" id="progT">0/14 trang · 0 sao</div>
+      <div id="railList"></div>
+    </nav>
+    <main class="stage" id="stage">
+
+<!-- 0 COVER -->
+<section class="slide" data-title="Trang bìa" data-group="Mở đầu" data-say="Chào các em. Hôm nay chúng ta học Bài 7: Nội lực và ngoại lực. Địa hình bề mặt Trái Đất là kết quả tác động đồng thời và liên tục của hai lực này. Hai lực diễn ra ở đâu, do nguyên nhân nào, và tác động tới địa hình ra sao? Chúng ta cùng tìm hiểu.">
+  <div class="cover-grid">
+    <div>
+      <p class="eyebrow">Địa lí 10 · Bài 7 · Tiết 11 + 12 + 13</p>
+      <h1 class="cover-title"><span class="t-magma">Nội lực</span><span class="amp">và</span><span class="t-river">Ngoại lực</span></h1>
+      <p class="lead">Một lực đẩy lên từ lòng đất, một lực bào mòn từ bên ngoài. Cùng nhau, chúng nhào nặn nên mọi dạng địa hình trên bề mặt Trái Đất.</p>
+      <div class="cover-actions">
+        <button class="btn primary lg" id="startBtn">Bắt đầu bài học <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        <button class="btn ghost lg" data-say-btn>Nghe giới thiệu</button>
+      </div>
+      <dl class="meta">
+        <div><dt>Trường</dt><dd>PTDTNT THPT Bình Thuận</dd></div>
+        <div><dt>Giáo viên</dt><dd>Trần Thị Thái Hiền</dd></div>
+        <div><dt>Tổ</dt><dd>Sử – Địa – QPAN</dd></div>
+      </dl>
+    </div>
+    <figure class="cover-fig" aria-label="Lát cắt vỏ Trái Đất: nội lực đẩy lên, ngoại lực bào mòn">
+      <svg viewBox="0 0 600 440" role="img">
+        <defs>
+          <linearGradient id="cvMantle" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--mantle)"/><stop offset="1" stop-color="var(--magma)"/></linearGradient>
+          <clipPath id="cvClip"><rect x="0" y="0" width="600" height="440" rx="22"/></clipPath>
+        </defs>
+        <g clip-path="url(#cvClip)">
+          <rect width="600" height="440" fill="var(--sky)"/>
+          <g class="sunrays" stroke="var(--ochre)" stroke-width="4" stroke-linecap="round">
+            <path d="M520 20v-12M520 104v12M478 62h-12M562 62h12M490 32l-8-8M550 92l8 8M550 32l8-8M490 92l-8 8"/>
+          </g>
+          <circle cx="520" cy="62" r="26" fill="var(--core)"/>
+          <g fill="var(--card)"><ellipse cx="150" cy="52" rx="58" ry="20"/><ellipse cx="118" cy="44" rx="30" ry="20"/><ellipse cx="178" cy="40" rx="34" ry="22"/></g>
+          <g stroke="var(--river)" stroke-width="3" stroke-linecap="round">
+            <path class="drop" d="M110 78v10"/><path class="drop" d="M140 82v10" style="animation-delay:.3s"/><path class="drop" d="M170 78v10" style="animation-delay:.6s"/><path class="drop" d="M195 84v10" style="animation-delay:.9s"/>
+          </g>
+          <!-- crust surface -->
+          <path d="M0 230 L70 205 L150 110 L200 150 L250 118 L320 196 L400 214 L470 222 L600 226 V290 H0Z" fill="var(--crust-2)"/>
+          <path d="M0 290 V250 C120 242 260 250 600 246 V290Z" fill="var(--crust)"/>
+          <path d="M0 290 H600" stroke="var(--ink)" stroke-opacity=".25"/>
+          <!-- river + delta -->
+          <path d="M268 140 C300 180 330 205 400 214 S540 224 600 226" fill="none" stroke="var(--river)" stroke-width="5" stroke-linecap="round"/>
+          <path d="M470 222 C510 214 560 216 600 220 V230 H470Z" fill="var(--ochre)" opacity=".7"/>
+          <!-- mantle -->
+          <rect x="0" y="290" width="600" height="150" fill="url(#cvMantle)"/>
+          <g fill="none" stroke="var(--core)" stroke-width="3" stroke-linecap="round">
+            <path class="conv" d="M60 420 C40 330 210 320 220 410"/>
+            <path class="conv" d="M330 420 C320 320 520 320 540 420" style="animation-direction:reverse"/>
+          </g>
+          <g class="arrow-up" fill="var(--card)">
+            <path d="M150 300 l-18 26 h12 v40 h12 v-40 h12z"/>
+            <path d="M430 300 l-18 26 h12 v40 h12 v-40 h12z"/>
+          </g>
+          <g font-family="Barlow Condensed, Arial Narrow, sans-serif" font-weight="800" font-size="30" letter-spacing="2">
+            <text x="196" y="394" fill="var(--card)">NỘI LỰC ↑</text>
+            <text x="290" y="104" fill="var(--river)">NGOẠI LỰC ↓</text>
+          </g>
+          <g font-family="Be Vietnam Pro, sans-serif" font-size="14" font-weight="600" fill="var(--ink)">
+            <text x="20" y="276">Vỏ Trái Đất</text>
+            <text x="476" y="250">Bồi tụ</text>
+          </g>
+        </g>
+      </svg>
+    </figure>
+  </div>
+</section>
+
+<!-- 1 OBJECTIVES -->
+<section class="slide" data-title="Mục tiêu bài học" data-group="Mở đầu" hidden data-say="Mục tiêu bài học. Về kiến thức, các em cần trình bày được khái niệm, nguyên nhân của nội lực và ngoại lực, và tác động của chúng đến địa hình bề mặt Trái Đất. Về năng lực, các em phân tích được lược đồ, sơ đồ, tranh ảnh, và biết phòng tránh tác hại của thiên tai. Về phẩm chất, các em có trách nhiệm khi làm việc nhóm và biết cảm thông với những nơi thường gặp thiên tai.">
+  <div class="head"><p class="eyebrow">Trước khi bắt đầu</p><h2>Sau 3 tiết học, em sẽ…</h2></div>
+  <div class="grid3">
+    <div class="panel obj rise"><span class="k t-magma">Kiến thức</span>
+      <ul class="clean">
+        <li>Trình bày khái niệm, nguyên nhân của <b>nội lực</b> và <b>ngoại lực</b>.</li>
+        <li>Nêu tác động của từng lực đến sự hình thành địa hình bề mặt Trái Đất.</li>
+        <li>Phân tích lược đồ, sơ đồ, tranh ảnh về các tác động đó.</li>
+      </ul></div>
+    <div class="panel obj rise"><span class="k t-river">Năng lực</span>
+      <ul class="clean">
+        <li>Tự học: khai thác SGK và học liệu số.</li>
+        <li>Hợp tác: thảo luận, trình bày, bảo vệ ý kiến trong nhóm.</li>
+        <li>Vận dụng: giải thích sự đa dạng của địa hình, phòng tránh thiên tai do nội lực, ngoại lực gây ra.</li>
+      </ul></div>
+    <div class="panel obj rise"><span class="k t-ochre">Phẩm chất</span>
+      <ul class="clean">
+        <li>Trách nhiệm: hoàn thành phần việc được giao khi làm nhóm.</li>
+        <li>Nhân ái: cảm thông với những đất nước, con người thường gặp thiên tai.</li>
+      </ul></div>
+  </div>
+  <div class="callout r rise"><b>Chuẩn bị:</b> SGK Địa lí 10, vở ghi, đồ dùng học tập và điện thoại thông minh để tra cứu học liệu số.</div>
+</section>
+
+<!-- 2 WARM-UP -->
+<section class="slide" data-title="Khởi động: Ai gây ra?" data-group="HĐ1 · Khởi động" hidden data-say="Khởi động. Mỗi thẻ là một hiện tượng tự nhiên. Em hãy xếp từng hiện tượng vào đúng nhóm: do nội lực hay do ngoại lực gây ra. Bấm chọn một thẻ, rồi bấm vào cột phù hợp. Trên máy tính, em cũng có thể kéo thả.">
+  <div class="head"><p class="eyebrow o">Hoạt động 1 · Khởi động · 5 phút</p><h2>Hiện tượng này do đâu mà có?</h2><p class="lead">Bấm chọn một thẻ rồi bấm vào cột phù hợp (hoặc kéo thả). Xếp xong, bấm <b>Kiểm tra</b>.</p></div>
+  <div id="sortWarm"></div>
+  <div class="callout" id="warmLead" hidden><b>Dẫn dắt vào bài:</b> Địa hình bề mặt Trái Đất là kết quả tác động <b>đồng thời và liên tục</b> của nội lực và ngoại lực. Vậy hai lực này diễn ra ở đâu, do nguyên nhân nào và tác động tới địa hình ra sao?</div>
+</section>
+
+<!-- 3 NOI LUC -->
+<section class="slide" data-title="Nội lực: khái niệm, nguồn gốc" data-group="HĐ2 · Hình thành kiến thức" hidden data-say="Nội lực là lực sinh ra trong lòng Trái Đất, liên quan đến nguồn năng lượng bên trong Trái Đất. Nguồn gốc của nội lực gồm bốn yếu tố: sự phân huỷ các chất phóng xạ, các phản ứng hoá học toả nhiệt, chuyển động tự quay của Trái Đất, và sự sắp xếp vật chất theo tỉ trọng. Em hãy bấm vào từng số trên hình để tìm hiểu, sau đó hoàn thành phiếu học tập số 1.">
+  <div class="head"><p class="eyebrow m">Nhiệm vụ 1 · Tác động của nội lực</p><h2>Nội lực đến từ đâu?</h2></div>
+  <div class="grid2">
+    <div class="panel earth rise">
+      <svg viewBox="0 0 420 300" role="img" aria-label="Lát cắt Trái Đất với 4 nguồn gốc nội lực" id="earthSvg">
+        <defs>
+          <radialGradient id="eMantle" cx=".5" cy="1" r="1"><stop offset=".35" stop-color="var(--core)"/><stop offset=".7" stop-color="var(--mantle)"/><stop offset="1" stop-color="var(--magma)"/></radialGradient>
+        </defs>
+        <path d="M-70 300 A280 280 0 0 1 490 300Z" fill="var(--crust)"/>
+        <path d="M-58 300 A268 268 0 0 1 478 300Z" fill="url(#eMantle)"/>
+        <path d="M60 300 A150 150 0 0 1 360 300Z" fill="var(--core)" opacity=".9"/>
+        <path d="M130 300 A80 80 0 0 1 290 300Z" fill="#FFF1CF"/>
+        <g fill="none" stroke="var(--card)" stroke-width="3" stroke-linecap="round" opacity=".85">
+          <path class="conv" d="M40 250 C20 140 150 110 150 200"/>
+          <path class="conv" d="M270 200 C270 110 400 140 380 250" style="animation-direction:reverse"/>
+        </g>
+        <g font-family="Be Vietnam Pro, sans-serif" font-size="13" font-weight="700" fill="#1B2330">
+          <text x="180" y="292">Nhân trong</text><text x="182" y="236">Nhân ngoài</text><text x="296" y="112" fill="#fff">Manti</text><text x="352" y="40" fill="var(--ink)">Vỏ</text>
+        </g>
+        <g class="hot-pt" data-o="0"><circle class="ring" cx="210" cy="262" r="17" fill="var(--magma)" stroke="var(--card)" stroke-width="2"/><text x="210" y="268" text-anchor="middle" fill="#fff" font-weight="700" font-size="16">1</text></g>
+        <g class="hot-pt" data-o="1"><circle class="ring" cx="92" cy="170" r="17" fill="var(--magma)" stroke="var(--card)" stroke-width="2"/><text x="92" y="176" text-anchor="middle" fill="#fff" font-weight="700" font-size="16">2</text></g>
+        <g class="hot-pt" data-o="2"><circle class="ring" cx="210" cy="44" r="17" fill="var(--magma)" stroke="var(--card)" stroke-width="2"/><text x="210" y="50" text-anchor="middle" fill="#fff" font-weight="700" font-size="16">3</text></g>
+        <g class="hot-pt" data-o="3"><circle class="ring" cx="330" cy="180" r="17" fill="var(--magma)" stroke="var(--card)" stroke-width="2"/><text x="330" y="186" text-anchor="middle" fill="#fff" font-weight="700" font-size="16">4</text></g>
+        <path d="M150 22 C180 6 240 6 270 22" fill="none" stroke="var(--ink)" stroke-width="2"/>
+        <path d="M262 14 l10 9 -13 3" fill="none" stroke="var(--ink)" stroke-width="2" stroke-linejoin="round"/>
+      </svg>
+      <p class="hint" style="margin-top:8px">Bấm vào các số 1–4 trên hình hoặc từng thẻ bên cạnh.</p>
+    </div>
+    <div class="rise">
+      <div class="panel" style="margin-bottom:14px"><p class="eyebrow m">Khái niệm</p><p class="def">Nội lực là lực sinh ra <mark>trong lòng Trái Đất</mark>, liên quan đến nguồn năng lượng bên trong Trái Đất.</p></div>
+      <div class="origins" id="origins">
+        <button class="origin" data-o="0"><span class="n">1</span><b>Phân huỷ các chất phóng xạ</b><span>Các nguyên tố phóng xạ trong lòng đất phân huỷ, giải phóng nhiệt lượng rất lớn.</span></button>
+        <button class="origin" data-o="1"><span class="n">2</span><b>Phản ứng hoá học toả nhiệt</b><span>Vật chất trong lòng đất phản ứng với nhau và toả ra năng lượng.</span></button>
+        <button class="origin" data-o="2"><span class="n">3</span><b>Chuyển động tự quay của Trái Đất</b><span>Trái Đất tự quay sinh ra lực làm vật chất bên trong dịch chuyển.</span></button>
+        <button class="origin" data-o="3"><span class="n">4</span><b>Sắp xếp vật chất theo tỉ trọng</b><span>Vật chất nặng chìm xuống, vật chất nhẹ nổi lên, tạo nên các dòng đối lưu trong manti.</span></button>
+      </div>
+    </div>
+  </div>
+  <div class="task">
+    <div class="task-h"><span class="tag m">Phiếu học tập số 1 · Nhóm 1, 3</span><h3>Khái niệm và nguyên nhân của nội lực</h3></div>
+    <p class="hint" style="margin-bottom:8px">Bấm vào một ô trống rồi chọn từ phù hợp ở ngân hàng từ. Bấm vào ô đã điền để xoá.</p>
+    <div id="fill1"></div>
+  </div>
+</section>
+
+<!-- 4 SIMULATOR -->
+<section class="slide" data-title="Mô phỏng vận động kiến tạo" data-group="HĐ2 · Hình thành kiến thức" hidden data-say="Nội lực tác động đến địa hình thông qua các vận động kiến tạo. Vận động theo phương thẳng đứng làm một bộ phận lục địa nâng lên, bộ phận khác hạ xuống, gây ra hiện tượng biển tiến, biển thoái. Vận động theo phương nằm ngang làm vỏ Trái Đất bị nén ép, tạo uốn nếp, hoặc bị tách giãn, tạo đứt gãy như địa luỹ, địa hào. Em hãy kéo thanh trượt để quan sát.">
+  <div class="head"><p class="eyebrow m">Nhiệm vụ 1 · Mô phỏng</p><h2>Kéo thanh trượt, xem vỏ Trái Đất biến dạng</h2><p class="lead">Nội lực tác động đến địa hình thông qua <b>vận động kiến tạo</b>: theo phương thẳng đứng và theo phương nằm ngang.</p></div>
+  <div class="tabs" role="tablist" id="simTabs">
+    <button class="tab" role="tab" aria-selected="true" data-mode="v">Thẳng đứng</button>
+    <button class="tab" role="tab" aria-selected="false" data-mode="c">Nằm ngang: nén ép</button>
+    <button class="tab" role="tab" aria-selected="false" data-mode="t">Nằm ngang: tách giãn</button>
+  </div>
+  <div class="sim"><svg id="simSvg" viewBox="0 0 800 340" role="img" aria-label="Mô phỏng vận động kiến tạo"></svg></div>
+  <div class="sim-ctl">
+    <label for="simRange" id="simL0">Hạ xuống</label>
+    <input type="range" id="simRange" min="-100" max="100" value="0">
+    <label for="simRange" id="simL1">Nâng lên</label>
+  </div>
+  <div class="sub-tabs" id="faultType" hidden>
+    <button class="tab" aria-selected="true" data-f="g">Địa hào</button>
+    <button class="tab" aria-selected="false" data-f="h">Địa luỹ</button>
+  </div>
+  <p class="readout" id="simOut" aria-live="polite"></p>
+  <div class="callout m" id="simNote"></div>
+</section>
+
+<!-- 5 PHIEU 2 -->
+<section class="slide" data-title="Phiếu số 2: Tác động của nội lực" data-group="HĐ2 · Hình thành kiến thức" hidden data-say="Phiếu học tập số 2. Em hãy xếp các thẻ kiến thức vào đúng loại vận động kiến tạo: theo phương thẳng đứng, theo phương nằm ngang, hoặc xu hướng chung của nội lực.">
+  <div class="head"><p class="eyebrow m">Phiếu học tập số 2 · Nhóm 2, 4</p><h2>Tác động của nội lực</h2><p class="lead">Xếp mỗi thẻ vào đúng hàng của phiếu.</p></div>
+  <div id="sort2"></div>
+  <div class="callout r"><b>Tra cứu thêm:</b> mỗi nhóm cử 1 bạn dùng điện thoại tìm video mô phỏng trên YouTube:
+    <a href="https://www.youtube.com/results?search_query=m%C3%B4+ph%E1%BB%8Fng+%C4%91%E1%BB%A9t+g%C3%A3y+San+Andreas" target="_blank" rel="noopener">đứt gãy San Andreas</a> ·
+    <a href="https://www.youtube.com/results?search_query=s%E1%BB%B1+h%C3%ACnh+th%C3%A0nh+d%C3%A3y+Himalaya" target="_blank" rel="noopener">sự hình thành dãy Himalaya</a>.</div>
+  <details class="note"><summary>Nội dung ghi bài: Nội lực</summary><div class="nbody tbl-wrap">
+    <table class="kb"><tbody>
+      <tr><th>Nội lực là gì?</th><td>Lực sinh ra trong lòng Trái Đất, liên quan đến nguồn năng lượng bên trong Trái Đất.</td></tr>
+      <tr><th>Nguồn gốc của nội lực?</th><td>Do sự phân huỷ các chất phóng xạ, các phản ứng hoá học toả nhiệt, chuyển động tự quay của Trái Đất và sự sắp xếp vật chất theo tỉ trọng.</td></tr>
+      <tr><th>Nội lực tác động thông qua những vận động nào?</th><td>Thông qua các vận động kiến tạo: vận động theo phương thẳng đứng và vận động theo phương nằm ngang.</td></tr>
+      <tr><th>Kết quả của vận động thẳng đứng?</th><td>Một bộ phận lục địa được nâng lên, bộ phận khác bị hạ xuống, gây ra hiện tượng biển tiến, biển thoái.</td></tr>
+      <tr><th>Kết quả của vận động nằm ngang?</th><td>Vỏ Trái Đất bị nén ép hoặc tách giãn, tạo nên uốn nếp (nếp uốn, vùng núi uốn nếp) và đứt gãy (địa luỹ, địa hào, hẻm vực).</td></tr>
+    </tbody></table></div></details>
+</section>
+
+<!-- 6 NGOAI LUC Q&A -->
+<section class="slide" data-title="Ngoại lực: 5 câu hỏi gợi mở" data-group="HĐ2 · Hình thành kiến thức" hidden data-say="Nhiệm vụ 2: Tìm hiểu về ngoại lực. Có năm câu hỏi gợi mở. Em hãy suy nghĩ, trao đổi với bạn bên cạnh, rồi bấm vào thẻ để xem gợi ý trả lời.">
+  <div class="head"><p class="eyebrow r">Nhiệm vụ 2 · Tìm hiểu ngoại lực · 15 phút</p><h2>Vì sao bề mặt Trái Đất luôn thay đổi?</h2><p class="lead">Thảo luận nhóm đôi từng câu, sau đó bấm vào thẻ để lật xem gợi ý.</p></div>
+  <div class="flips" id="flips"></div>
+</section>
+
+<!-- 7 PHIEU NGOAI LUC -->
+<section class="slide" data-title="Phiếu học tập: Ngoại lực" data-group="HĐ2 · Hình thành kiến thức" hidden data-say="Phiếu học tập ngoại lực. Ở mỗi hàng, em hãy chọn nội dung đúng. Ngoại lực là lực sinh ra trên bề mặt Trái Đất, nguồn năng lượng là bức xạ Mặt Trời, và có xu hướng san bằng bề mặt địa hình.">
+  <div class="head"><p class="eyebrow r">Phiếu học tập · Ngoại lực</p><h2>Hoàn thành phiếu: chọn ý đúng ở mỗi hàng</h2></div>
+  <div class="panel"><div id="rows7"></div>
+    <div class="ex-actions"><button class="btn primary" id="chk7">Kiểm tra</button><button class="btn ghost" id="rst7">Làm lại</button><span class="ex-msg" id="msg7" aria-live="polite"></span></div></div>
+  <div class="callout"><b>Chốt kiến thức:</b> Nguồn năng lượng sinh ra ngoại lực là <b>bức xạ Mặt Trời</b>. Dưới tác dụng của Mặt Trời, đá trên bề mặt thạch quyển bị phá huỷ; năng lượng của các tác nhân ngoại lực (nước chảy, gió, băng tuyết…) trực tiếp hay gián tiếp đều liên quan đến bức xạ Mặt Trời.</div>
+  <details class="note"><summary>Nội dung ghi bài: Ngoại lực</summary><div class="nbody tbl-wrap">
+    <table class="kb"><tbody>
+      <tr><th>Khái niệm</th><td>Lực sinh ra trên bề mặt Trái Đất.</td></tr>
+      <tr><th>Nguồn gốc</th><td>Nguồn năng lượng của bức xạ Mặt Trời.</td></tr>
+      <tr><th>Tác nhân</th><td>Nhiệt độ, gió, mưa, nước chảy, băng tan, sóng biển và cả con người.</td></tr>
+      <tr><th>Tác động</th><td>Có xu hướng san bằng bề mặt địa hình → tạo ra các dạng địa hình mới.</td></tr>
+      <tr><th>Quá trình</th><td>4 quá trình chính: phong hoá, bóc mòn, vận chuyển và bồi tụ.</td></tr>
+    </tbody></table></div></details>
+</section>
+
+<!-- 8 EROSION -->
+<section class="slide" data-title="Bốn quá trình ngoại lực" data-group="HĐ2 · Hình thành kiến thức" hidden data-say="Quan sát mô phỏng. Đá trên đỉnh núi bị phong hoá thành vụn. Nước mưa, dòng chảy bóc mòn, lấy vật liệu khỏi vị trí ban đầu. Dòng sông vận chuyển vật liệu đi xa, rồi bồi tụ ở cửa sông, tạo nên địa hình mới. Bấm từng quá trình để xem chi tiết.">
+  <div class="head"><p class="eyebrow r">Nhiệm vụ 3 · Tác động của ngoại lực · 30 phút</p><h2>Từ đỉnh núi ra cửa sông</h2><p class="lead">Theo dõi một hạt vật liệu: bị phá vụn, bị cuốn đi, trôi theo dòng sông và lắng lại thành đất mới.</p></div>
+  <div class="ero"><canvas id="eroCanvas" width="1600" height="800" aria-label="Mô phỏng phong hoá, bóc mòn, vận chuyển, bồi tụ"></canvas></div>
+  <div class="stage-tabs" role="tablist" id="stageTabs">
+    <button class="stab" role="tab" aria-selected="true" data-s="0">Phong hoá<small>Phá huỷ đá</small></button>
+    <button class="stab" role="tab" aria-selected="false" data-s="1">Bóc mòn<small>Lấy vật liệu đi</small></button>
+    <button class="stab" role="tab" aria-selected="false" data-s="2">Vận chuyển<small>Di chuyển đi xa</small></button>
+    <button class="stab" role="tab" aria-selected="false" data-s="3">Bồi tụ<small>Tích tụ lại</small></button>
+  </div>
+  <div class="panel pinfo" id="pinfo"></div>
+  <div class="task">
+    <div class="task-h"><span class="tag r">Nhiệm vụ nhóm · 10 phút</span><h3>Thiết kế sản phẩm số</h3></div>
+    <div class="grid3" style="margin-bottom:14px">
+      <div><b class="t-river">Nhóm 1</b><br>Infographic về quá trình <b>phong hoá</b></div>
+      <div><b class="t-river">Nhóm 2</b><br>Poster về quá trình <b>bóc mòn</b></div>
+      <div><b class="t-river">Nhóm 3</b><br>Sơ đồ tư duy số về <b>vận chuyển và bồi tụ</b></div>
+    </div>
+    <p class="hint" style="margin-bottom:12px">Mỗi sản phẩm nêu được khái niệm, nguyên nhân, kết quả, ví dụ minh hoạ và ít nhất 2 hình ảnh. Có thể dùng Canva, PowerPoint hoặc Google Slides.</p>
+    <div class="timer"><span class="clock" id="clock">10:00</span>
+      <button class="btn primary" id="tStart">Bắt đầu</button><button class="btn ghost" id="tReset">Đặt lại</button></div>
+  </div>
+  <details class="note"><summary>Nội dung ghi bài: Tác động của ngoại lực</summary><div class="nbody">
+    <p><b>a) Phong hoá:</b> quá trình phá huỷ và làm biến đổi đá, khoáng vật dưới tác động của các nhân tố ngoại lực. Gồm phong hoá lí học, phong hoá hoá học và phong hoá sinh học.</p>
+    <p style="margin-top:8px"><b>b) Bóc mòn:</b> quá trình các tác nhân ngoại lực (nước chảy, gió, băng hà, sóng biển…) lấy đi các sản phẩm phong hoá khỏi vị trí ban đầu.</p>
+    <p style="margin-top:8px"><b>c) Vận chuyển và bồi tụ:</b> vận chuyển là quá trình di chuyển vật liệu do bóc mòn tạo ra đến nơi khác; bồi tụ là quá trình tích tụ vật liệu do tác nhân ngoại lực vận chuyển đến, góp phần hình thành các dạng địa hình mới.</p>
+  </div></details>
+</section>
+
+<!-- 9 RELATION -->
+<section class="slide" data-title="Mối quan hệ giữa các quá trình" data-group="HĐ2 · Hình thành kiến thức" hidden data-say="Mối quan hệ. Phong hoá tạo ra vật liệu phá huỷ. Vận chuyển đưa vật liệu đi. Bồi tụ là sự kết thúc của vận chuyển và tích tụ vật liệu. Các quá trình nối tiếp nhau. Nội lực làm bề mặt Trái Đất gồ ghề hơn, còn ngoại lực có xu hướng san bằng. Hai lực luôn tác động đồng thời.">
+  <div class="head"><p class="eyebrow o">Nhiệm vụ 3 · Phân tích mối quan hệ</p><h2>Các quá trình nối tiếp nhau như thế nào?</h2><p class="lead">Bấm lần lượt các thẻ theo đúng thứ tự diễn ra.</p></div>
+  <div class="order" id="order"></div>
+  <div class="ex-actions"><button class="btn primary" id="chkO">Kiểm tra</button><button class="btn ghost" id="rstO">Làm lại</button><span class="ex-msg" id="msgO" aria-live="polite"></span></div>
+  <div class="grid2" style="margin-top:22px">
+    <div class="panel"><h3>Mối quan hệ giữa các quá trình ngoại lực</h3>
+      <ul class="clean">
+        <li>Phong hoá, bóc mòn, vận chuyển và bồi tụ có mối quan hệ chặt chẽ, diễn ra <b>liên tục và kế tiếp nhau</b>.</li>
+        <li><b>Bóc mòn và bồi tụ</b> là hai quá trình trực tiếp tạo nên các dạng địa hình.</li>
+        <li>Ngoại lực có xu hướng phá huỷ, san bằng địa hình; tạo nhiều dạng địa hình đa dạng, chủ yếu là <b>địa hình nhỏ</b>.</li>
+      </ul></div>
+    <div class="panel balance"><h3>Cán cân nội lực – ngoại lực</h3>
+      <svg id="balSvg" viewBox="0 0 400 170" role="img" aria-label="Địa hình thay đổi theo cán cân nội lực và ngoại lực"></svg>
+      <input type="range" id="balRange" min="0" max="100" value="50" aria-label="Cán cân nội lực và ngoại lực" style="accent-color:var(--ochre)">
+      <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:600"><span class="t-river">Ngoại lực mạnh hơn</span><span class="t-magma">Nội lực mạnh hơn</span></div>
+      <p class="hint" id="balOut" style="margin-top:6px"></p>
+    </div>
+  </div>
+  <div class="callout m"><b>Mối quan hệ giữa nội lực và ngoại lực:</b> luôn tác động <b>đồng thời</b>, có quan hệ chặt chẽ và <b>đối lập</b> nhau trong quá trình hình thành, phát triển địa hình bề mặt Trái Đất.</div>
+</section>
+
+<!-- 10 WHEEL -->
+<section class="slide" data-title="Vòng quay may mắn" data-group="HĐ2 · Hình thành kiến thức" hidden data-say="Câu hỏi thảo luận: Ba quá trình phong hoá, vận chuyển và bồi tụ có quan hệ gì với nhau không? Vì sao em nhận định như vậy? Hãy viết câu trả lời ra giấy nháp. Vòng quay sẽ chọn ngẫu nhiên số thứ tự của bạn chia sẻ.">
+  <div class="head"><p class="eyebrow o">Quay số ngẫu nhiên · Cả lớp · 15 phút</p><h2>Ai sẽ trả lời?</h2></div>
+  <div class="wheel-wrap">
+    <div>
+      <div class="wheel"><canvas id="wheel" width="840" height="840" aria-label="Vòng quay chọn số thứ tự"></canvas><div class="pin" aria-hidden="true"></div></div>
+      <div class="wctl"><label for="wN" class="hint">Sĩ số</label><input id="wN" type="number" min="2" max="60" value="35"><button class="btn magma" id="wSpin">Quay!</button></div>
+    </div>
+    <div>
+      <div class="panel"><p class="eyebrow">Câu hỏi thảo luận</p><p style="font-size:20px;font-weight:600">Ba quá trình phong hoá, vận chuyển và bồi tụ có quan hệ gì với nhau không? Vì sao em lại nhận định như thế?</p></div>
+      <div style="margin-top:18px"><p class="eyebrow">Học sinh số</p><div class="winner" id="winner" aria-live="polite">—</div></div>
+      <details class="note"><summary>Kết luận của giáo viên</summary><div class="nbody"><p>Phong hoá tạo ra các vật liệu phá huỷ, là thành phần chính cho quá trình vận chuyển. Bồi tụ là sự kết thúc của vận chuyển và tích tụ vật liệu phá huỷ. Như vậy, ba quá trình này <b>nối tiếp nhau</b> trong việc tạo ra, di chuyển và tích tụ vật liệu phá huỷ.</p></div></details>
+    </div>
+  </div>
+</section>
+
+<!-- 11 QUIZ -->
+<section class="slide" data-title="Luyện tập: Trắc nghiệm" data-group="HĐ3 · Luyện tập" hidden data-say="Luyện tập. Em hãy trả lời mười câu hỏi trắc nghiệm. Mỗi câu có hai mươi giây. Chúc em làm bài tốt.">
+  <div class="head"><p class="eyebrow o">Hoạt động 3 · Luyện tập · 5 phút</p><h2>Thử thách 10 câu hỏi</h2></div>
+  <div class="quiz" id="quiz"></div>
+</section>
+
+<!-- 12 APPLY -->
+<section class="slide" data-title="Vận dụng: Địa hình Việt Nam" data-group="HĐ4 · Vận dụng" hidden data-say="Vận dụng. Tại sao quá trình bóc mòn và bồi tụ do dòng nước ở nước ta phát triển mạnh? Các quá trình này tác động đến địa hình nước ta như thế nào? Em hãy viết câu trả lời, rồi bấm xem gợi ý.">
+  <div class="head"><p class="eyebrow o">Hoạt động 4 · Vận dụng · 5 phút</p><h2>Vì sao ở Việt Nam, dòng nước bóc mòn và bồi tụ mạnh?</h2><p class="lead">Các quá trình này tác động đến địa hình nước ta như thế nào?</p></div>
+  <div class="grid2">
+    <div class="panel"><label for="ans12" class="eyebrow" style="display:block">Câu trả lời của em</label><textarea id="ans12" placeholder="Gợi ý: nghĩ về dạng địa hình chủ yếu, khí hậu, lượng mưa và đường bờ biển nước ta…"></textarea>
+      <div class="ex-actions"><button class="btn primary" id="show12">Xem gợi ý đáp án</button></div></div>
+    <div class="panel" id="key12" hidden>
+      <h3>Nguyên nhân</h3>
+      <ul class="clean"><li>Địa hình nước ta chủ yếu là <b>đồi núi</b>; khí hậu <b>nhiệt đới ẩm gió mùa</b>, lượng nhiệt và lượng mưa rất cao.</li>
+      <li>Đường bờ biển dài <b>3 260 km</b>, chịu tác động của thuỷ triều; nhiều núi cao lan ra sát biển ở miền Trung.</li></ul>
+      <h3 style="margin-top:14px">Tác động đến địa hình</h3>
+      <ul class="clean"><li>Dòng nước xâm thực ở miền núi tạo nên những cánh đồng giữa núi khá rộng.</li><li>Tác động của bóc mòn tạo nên nhiều vịnh biển.</li></ul>
+    </div>
+  </div>
+  <div class="places">
+    <div class="place r"><b>Mường Thanh</b><small>Cánh đồng giữa núi</small></div>
+    <div class="place r"><b>Mường Lò</b><small>Cánh đồng giữa núi</small></div>
+    <div class="place o"><b>Vịnh Hạ Long</b><small>Vịnh biển</small></div>
+    <div class="place o"><b>Vịnh Cam Ranh</b><small>Vịnh biển</small></div>
+  </div>
+  <div class="task"><div class="task-h"><span class="tag">Liên hệ thực tế</span><h3>Ở địa phương em, quá trình ngoại lực nào diễn ra rõ nét nhất?</h3></div>
+    <label for="local12" class="hint">Nêu tên hoặc mô tả đặc điểm quá trình (ví dụ: sóng biển xói lở bờ, gió tạo cồn cát, sạt lở đất mùa mưa…)</label>
+    <textarea id="local12" style="margin-top:8px;min-height:90px"></textarea></div>
+</section>
+
+<!-- 13 SUMMARY -->
+<section class="slide" data-title="Tổng kết và dặn dò" data-group="Tổng kết" hidden data-say="Tổng kết bài học. Nội lực sinh ra trong lòng Trái Đất, làm địa hình gồ ghề hơn. Ngoại lực sinh ra trên bề mặt Trái Đất, có xu hướng san bằng địa hình. Hai lực luôn tác động đồng thời và đối lập nhau. Về nhà, các em tìm hiểu sự phân bố các vành đai động đất, núi lửa trên Trái Đất, và các trận động đất, núi lửa từng xảy ra ở Việt Nam.">
+  <div class="head"><p class="eyebrow">Tổng kết</p><h2>Hai lực, một bề mặt Trái Đất</h2></div>
+  <div class="panel tbl-wrap">
+    <table class="compare">
+      <thead><tr><th></th><th>Nội lực</th><th>Ngoại lực</th></tr></thead>
+      <tbody>
+        <tr><th>Sinh ra ở</th><td>Trong lòng Trái Đất</td><td>Trên bề mặt Trái Đất</td></tr>
+        <tr><th>Nguồn năng lượng</th><td>Phân huỷ chất phóng xạ, phản ứng hoá học toả nhiệt, Trái Đất tự quay, sắp xếp vật chất theo tỉ trọng</td><td>Bức xạ Mặt Trời</td></tr>
+        <tr><th>Tác động qua</th><td>Vận động kiến tạo: thẳng đứng (biển tiến, biển thoái) và nằm ngang (uốn nếp, đứt gãy)</td><td>Phong hoá → bóc mòn → vận chuyển → bồi tụ</td></tr>
+        <tr><th>Xu hướng</th><td>Làm bề mặt địa hình gồ ghề hơn</td><td>San bằng bề mặt địa hình, tạo địa hình nhỏ</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="grid2" style="margin-top:20px">
+    <div class="panel"><h3>Kết quả của em</h3><div class="results" id="results"></div><p id="resMsg" style="margin-top:12px;font-weight:600"></p></div>
+    <div class="panel"><h3>Chuẩn bị cho tiết sau</h3>
+      <ul class="clean">
+        <li>Trình bày sự phân bố các vành đai động đất, núi lửa trên Trái Đất.</li>
+        <li>Nhận xét và giải thích sự phân bố các vành đai động đất, núi lửa.</li>
+        <li>Tìm hiểu thông tin về các hiện tượng động đất, núi lửa đã từng xảy ra ở Việt Nam.</li>
+      </ul>
+      <div class="ex-actions"><button class="btn ghost" id="restartAll">Học lại từ đầu</button></div>
+    </div>
+  </div>
+</section>
+
+    </main>
+  </div>
+
+  <footer class="foot">
+    <button class="btn ghost" id="prevBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>Trước</button>
+    <button class="btn ghost" id="readBtn" title="Đọc nội dung trang này"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/></svg><span id="readLbl">Đọc bài</span></button>
+    <div class="spacer" id="footTitle"></div>
+    <button class="btn primary" id="nextBtn">Tiếp<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+  </footer>
+</div>
+<div class="toast" id="toast" role="status"></div>
+<canvas id="confetti" aria-hidden="true"></canvas>
+
+<script>
+(function(){
+"use strict";
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+const store={get(k,d){try{const v=localStorage.getItem('nlnl-'+k);return v==null?d:JSON.parse(v);}catch(e){return d;}},set(k,v){try{localStorage.setItem('nlnl-'+k,JSON.stringify(v));}catch(e){}}};
+function toast(t){const el=$('#toast');el.textContent=t;el.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(()=>el.classList.remove('show'),2600);}
+
+/* ---------- SOUND ---------- */
+const Sound={ctx:null,on:true,music:null,
+  init(){if(!this.ctx){const AC=window.AudioContext||window.webkitAudioContext;if(AC){try{this.ctx=new AC();}catch(e){}}}if(this.ctx&&this.ctx.state==='suspended')this.ctx.resume();},
+  tone(f,d,type,vol,when,to){if(!this.on||!this.ctx)return;const c=this.ctx,t=c.currentTime+(when||0);const o=c.createOscillator(),g=c.createGain();o.type=type||'sine';o.frequency.setValueAtTime(f,t);if(to)o.frequency.exponentialRampToValueAtTime(to,t+d);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol||.1,t+.01);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g).connect(c.destination);o.start(t);o.stop(t+d+.05);},
+  noise(d,vol,f1,f2,when){if(!this.on||!this.ctx)return;const c=this.ctx,t=c.currentTime+(when||0);const len=Math.floor(c.sampleRate*d),b=c.createBuffer(1,len,c.sampleRate),ch=b.getChannelData(0);for(let i=0;i<len;i++)ch[i]=Math.random()*2-1;const s=c.createBufferSource();s.buffer=b;const fl=c.createBiquadFilter();fl.type='bandpass';fl.Q.value=1.2;fl.frequency.setValueAtTime(f1,t);fl.frequency.exponentialRampToValueAtTime(f2,t+d);const g=c.createGain();g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol,t+d*.3);g.gain.exponentialRampToValueAtTime(.0001,t+d);s.connect(fl).connect(g).connect(c.destination);s.start(t);s.stop(t+d);},
+  click(){this.tone(720,.06,'triangle',.07);},
+  pop(){this.tone(420,.09,'sine',.12,0,820);},
+  whoosh(){this.noise(.35,.12,400,2400);},
+  correct(){[523.3,659.3,784].forEach((f,i)=>this.tone(f,.22,'triangle',.11,i*.08));},
+  wrong(){this.tone(196,.28,'sawtooth',.05,0,150);this.tone(185,.3,'square',.03,.06,140);},
+  tick(){this.tone(1500,.025,'square',.035);},
+  flip(){this.noise(.18,.08,1200,3000);},
+  rumble(){this.noise(.25,.12,120,60);this.tone(55,.25,'sine',.08);},
+  fanfare(){[523.3,659.3,784,1046.5].forEach((f,i)=>this.tone(f,.32,'triangle',.11,i*.12));this.tone(1046.5,.7,'sine',.08,.5);},
+  alarm(){for(let i=0;i<3;i++){this.tone(880,.15,'square',.06,i*.3);this.tone(660,.15,'square',.06,i*.3+.15);}},
+  startMusic(){if(!this.ctx||this.music)return;const c=this.ctx,master=c.createGain();master.gain.value=0;master.gain.linearRampToValueAtTime(.05,c.currentTime+2);const lp=c.createBiquadFilter();lp.type='lowpass';lp.frequency.value=1100;master.connect(lp).connect(c.destination);
+    const chords=[[220,261.6,329.6,440],[174.6,220,261.6,349.2],[261.6,329.6,392,523.3],[196,246.9,293.7,392]];let k=0;
+    const play=()=>{const t=c.currentTime;chords[k%4].forEach((f,i)=>{const o=c.createOscillator(),g=c.createGain();o.type=i===3?'triangle':'sine';o.frequency.value=f;o.detune.value=(i-1.5)*4;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.22,t+1.2);g.gain.linearRampToValueAtTime(.0001,t+4.6);o.connect(g).connect(master);o.start(t);o.stop(t+4.8);});
+      const m=chords[k%4][Math.floor(Math.random()*4)]*2;const o=c.createOscillator(),g=c.createGain();o.type='sine';o.frequency.value=m;g.gain.setValueAtTime(0,t+1);g.gain.linearRampToValueAtTime(.12,t+1.1);g.gain.exponentialRampToValueAtTime(.0001,t+2.6);o.connect(g).connect(master);o.start(t+1);o.stop(t+2.7);k++;};
+    play();this.music={master,iv:setInterval(play,4000)};},
+  stopMusic(){if(!this.music)return;const m=this.music;clearInterval(m.iv);try{m.master.gain.linearRampToValueAtTime(0,this.ctx.currentTime+.8);}catch(e){}setTimeout(()=>{try{m.master.disconnect();}catch(e){}},1000);this.music=null;}
+};
+document.addEventListener('pointerdown',()=>Sound.init(),{capture:true});
+document.addEventListener('keydown',()=>Sound.init(),{capture:true});
+
+/* ---------- VOICE ---------- */
+const Voice={ok:'speechSynthesis' in window,voice:null,speaking:false,warned:false,
+  pick(){if(!this.ok)return;const vs=speechSynthesis.getVoices();this.voice=vs.find(v=>/^vi/i.test(v.lang))||null;},
+  speak(text){if(!this.ok){toast('Trình duyệt này chưa hỗ trợ đọc bài.');return;}this.pick();speechSynthesis.cancel();
+    if(!this.voice&&!this.warned){this.warned=true;toast('Thiết bị chưa có giọng đọc tiếng Việt, có thể đọc chưa chuẩn.');}
+    const u=new SpeechSynthesisUtterance(text);u.lang='vi-VN';if(this.voice)u.voice=this.voice;u.rate=.98;
+    u.onend=u.onerror=()=>{this.speaking=false;updRead();};this.speaking=true;updRead();speechSynthesis.speak(u);
+    if(Sound.music)Sound.music.master.gain.linearRampToValueAtTime(.015,Sound.ctx.currentTime+.4);},
+  stop(){if(this.ok)speechSynthesis.cancel();this.speaking=false;updRead();}
+};
+if(Voice.ok){Voice.pick();speechSynthesis.onvoiceschanged=()=>Voice.pick();}
+function updRead(){$('#readLbl').textContent=Voice.speaking?'Dừng đọc':'Đọc bài';if(!Voice.speaking&&Sound.music&&Sound.ctx)Sound.music.master.gain.linearRampToValueAtTime(.05,Sound.ctx.currentTime+.6);}
+
+/* ---------- SCORES ---------- */
+const SCORE_KEYS=[['warm','Khởi động: Ai gây ra?',2],['fill1','Phiếu học tập số 1',3],['sort2','Phiếu học tập số 2',5],['row7','Phiếu học tập Ngoại lực',7],['order','Sắp xếp quá trình',9],['quiz','Trắc nghiệm 10 câu',11]];
+const Score={d:store.get('score',{}),
+  set(k,got,tot){const prev=this.d[k];if(!prev||got>=prev.got)this.d[k]={got,tot};store.set('score',this.d);renderRail();renderResults();},
+  stars(){let s=0;for(const k in this.d){const r=this.d[k];s+=r.got===r.tot?3:r.got/r.tot>=.6?2:r.got>0?1:0;}return s;}};
+const starStr=(g,t)=>{const n=g===t?3:g/t>=.6?2:g>0?1:0;return '★'.repeat(n)+'☆'.repeat(3-n);};
+
+/* ---------- NAV ---------- */
+const slides=$$('.slide');let cur=0;const seen=new Set(store.get('seen',[0]));
+function renderRail(){
+  const groups=[];slides.forEach((s,i)=>{const g=s.dataset.group;let G=groups.find(x=>x.g===g);if(!G){G={g,items:[]};groups.push(G);}G.items.push(i);});
+  const doneIdx=new Set(SCORE_KEYS.filter(k=>Score.d[k[0]]).map(k=>k[2]));
+  $('#railList').innerHTML=groups.map(G=>`<h4>${G.g}</h4><ol>${G.items.map(i=>`<li><button data-go="${i}" class="${seen.has(i)?'seen':''} ${doneIdx.has(i)?'done':''}" ${i===cur?'aria-current="true"':''}><span class="dot">${doneIdx.has(i)?'✓':i+1}</span>${slides[i].dataset.title}</button></li>`).join('')}</ol>`).join('');
+  $('#progBar').style.width=(seen.size/slides.length*100)+'%';
+  $('#progT').textContent=`${seen.size}/${slides.length} trang · ${Score.stars()} sao`;
+}
+const inits={};
+function go(i,silent){
+  i=Math.max(0,Math.min(slides.length-1,i));
+  if(i===cur&&!silent&&slides[i].classList.contains('enter'))return;
+  Voice.stop();
+  slides.forEach((s,j)=>{s.hidden=j!==i;s.classList.remove('enter');});
+  void slides[i].offsetWidth;slides[i].classList.add('enter');
+  cur=i;seen.add(i);store.set('seen',[...seen]);store.set('cur',i);
+  $('#stage').scrollTop=0;
+  if(inits[i]&&!inits[i].done){inits[i].done=true;inits[i]();}
+  document.dispatchEvent(new CustomEvent('slide',{detail:i}));
+  $('#prevBtn').disabled=i===0;
+  $('#nextBtn').innerHTML=i===slides.length-1?'Hoàn thành':'Tiếp<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+  $('#footTitle').textContent=`Trang ${i+1}/${slides.length} · ${slides[i].dataset.title}`;
+  renderRail();
+  if(!silent)Sound.whoosh();
+  if(Auto.on&&!silent)setTimeout(()=>Voice.speak(slides[i].dataset.say),450);
+  $('#rail').classList.remove('open');$('#menuBtn').setAttribute('aria-expanded','false');
+}
+const Auto={on:false};
+$('#railList').addEventListener('click',e=>{const b=e.target.closest('[data-go]');if(b){Sound.click();go(+b.dataset.go);}});
+$('#prevBtn').onclick=()=>go(cur-1);
+$('#nextBtn').onclick=()=>{if(cur===slides.length-1){Sound.fanfare();confetti();}else go(cur+1);};
+$('#startBtn').onclick=()=>{Sound.init();go(1);};
+$('#restartAll').onclick=()=>go(0);
+$('#readBtn').onclick=()=>{if(Voice.speaking)Voice.stop();else Voice.speak(slides[cur].dataset.say);};
+$$('[data-say-btn]').forEach(b=>b.onclick=()=>Voice.speak(slides[cur].dataset.say));
+document.addEventListener('keydown',e=>{if(/INPUT|TEXTAREA/.test(document.activeElement.tagName))return;if(e.key==='ArrowRight'||e.key==='PageDown')go(cur+1);if(e.key==='ArrowLeft'||e.key==='PageUp')go(cur-1);});
+$('#menuBtn').onclick=()=>{const r=$('#rail');r.classList.toggle('open');$('#menuBtn').setAttribute('aria-expanded',r.classList.contains('open'));};
+$('#sfxBtn').onclick=e=>{Sound.on=!Sound.on;e.currentTarget.setAttribute('aria-pressed',Sound.on);if(Sound.on)Sound.click();};
+$('#musicBtn').onclick=e=>{Sound.init();if(Sound.music){Sound.stopMusic();e.currentTarget.setAttribute('aria-pressed','false');}else{Sound.startMusic();e.currentTarget.setAttribute('aria-pressed',Sound.music?'true':'false');}};
+$('#autoBtn').onclick=e=>{Auto.on=!Auto.on;e.currentTarget.setAttribute('aria-pressed',Auto.on);if(Auto.on)Voice.speak(slides[cur].dataset.say);else Voice.stop();};
+$('#fsBtn').onclick=()=>{try{if(document.fullscreenElement)document.exitFullscreen();else{const p=document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen();if(p&&p.catch)p.catch(()=>toast('Không bật được toàn màn hình trên thiết bị này.'));}}catch(e){toast('Không bật được toàn màn hình trên thiết bị này.');}};
+
+/* ---------- SORTER ---------- */
+function makeSorter(root,cfg){
+  root.innerHTML=`<div class="pool" data-bin="pool"></div><div class="bins">${cfg.bins.map(b=>`<div class="bin ${b.cls||''}" data-bin="${b.id}"><div class="bin-h">${b.label}</div><div class="bin-body"></div></div>`).join('')}</div>
+  <div class="ex-actions"><button class="btn primary" data-act="check">Kiểm tra</button><button class="btn ghost" data-act="reset">Làm lại</button><span class="ex-msg" aria-live="polite"></span></div>`;
+  const pool=$('.pool',root),msg=$('.ex-msg',root);let sel=null,drag=null;
+  function build(){pool.innerHTML='';$$('.bin-body',root).forEach(b=>b.innerHTML='');msg.textContent='';msg.className='ex-msg';
+    shuffle(cfg.items.slice()).forEach(it=>{const c=document.createElement('button');c.className='chip';c.textContent=it.t;c.dataset.ans=it.bin;c.draggable=true;pool.appendChild(c);});}
+  function place(chip,bin){const body=bin.dataset.bin==='pool'?pool:$('.bin-body',bin);body.appendChild(chip);chip.classList.remove('sel','ok','no');sel=null;Sound.pop();}
+  root.addEventListener('click',e=>{
+    const act=e.target.closest('[data-act]');
+    if(act){if(act.dataset.act==='reset'){Sound.click();build();}else check();return;}
+    const chip=e.target.closest('.chip');
+    if(chip){if(sel===chip){chip.classList.remove('sel');sel=null;}else{sel&&sel.classList.remove('sel');sel=chip;chip.classList.add('sel');}Sound.click();return;}
+    const bin=e.target.closest('[data-bin]');if(bin&&sel)place(sel,bin);
+  });
+  root.addEventListener('dragstart',e=>{const c=e.target.closest('.chip');if(c){drag=c;try{e.dataTransfer.setData('text/plain','x');}catch(_){}}});
+  root.addEventListener('dragover',e=>{const b=e.target.closest('[data-bin]');if(b&&drag){e.preventDefault();$$('.hot',root).forEach(x=>x.classList.remove('hot'));b.classList.add('hot');}});
+  root.addEventListener('dragleave',e=>{const b=e.target.closest('[data-bin]');if(b&&!b.contains(e.relatedTarget))b.classList.remove('hot');});
+  root.addEventListener('drop',e=>{const b=e.target.closest('[data-bin]');if(b&&drag){e.preventDefault();b.classList.remove('hot');place(drag,b);drag=null;}});
+  root.addEventListener('dragend',()=>{drag=null;$$('.hot',root).forEach(x=>x.classList.remove('hot'));});
+  function check(){
+    const chips=$$('.chip',root);let ok=0,left=0;
+    chips.forEach(c=>{const bin=c.closest('.bin');c.classList.remove('ok','no');if(!bin){left++;return;}if(bin.dataset.bin===c.dataset.ans){c.classList.add('ok');ok++;}else c.classList.add('no');});
+    if(left){msg.textContent=`Còn ${left} thẻ chưa xếp.`;msg.className='ex-msg bad';Sound.wrong();return;}
+    const tot=chips.length;Score.set(cfg.key,ok,tot);
+    if(ok===tot){msg.innerHTML=`Chính xác ${ok}/${tot}! <span class="stars">★★★</span>`;msg.className='ex-msg good';Sound.fanfare();confetti();}
+    else{msg.innerHTML=`Đúng ${ok}/${tot}. Kéo các thẻ màu đỏ sang cột khác rồi kiểm tra lại. <span class="stars">${starStr(ok,tot)}</span>`;msg.className='ex-msg bad';Sound.wrong();}
+    cfg.onCheck&&cfg.onCheck(ok,tot);
+  }
+  build();
+}
+
+/* 2 warm-up */
+inits[2]=()=>makeSorter($('#sortWarm'),{key:'warm',bins:[{id:'n',label:'Do nội lực',cls:'m'},{id:'g',label:'Do ngoại lực',cls:'r'}],
+  items:[{t:'Núi lửa phun trào',bin:'n'},{t:'Động đất làm nứt mặt đất',bin:'n'},{t:'Dãy Himalaya ngày càng cao thêm',bin:'n'},{t:'Đứt gãy San Andreas dịch chuyển',bin:'n'},
+         {t:'Sóng biển khoét vách đá thành hàm ếch',bin:'g'},{t:'Gió thổi cát thành cồn cát',bin:'g'},{t:'Nước chảy đá mòn',bin:'g'},{t:'Phù sa bồi đắp đồng bằng',bin:'g'}],
+  onCheck:()=>{$('#warmLead').hidden=false;}});
+
+/* 3 origins + fill */
+inits[3]=()=>{
+  const setO=i=>{$$('#origins .origin').forEach(b=>b.classList.toggle('on',+b.dataset.o===i));$$('#earthSvg .hot-pt').forEach(g=>g.classList.toggle('on',+g.dataset.o===i));Sound.pop();};
+  $('#origins').addEventListener('click',e=>{const b=e.target.closest('.origin');if(b)setO(+b.dataset.o);});
+  $$('#earthSvg .hot-pt').forEach(g=>g.addEventListener('click',()=>setO(+g.dataset.o)));
+  makeFill($('#fill1'),{key:'fill1',
+    text:'<b>Khái niệm:</b> Nội lực là lực sinh ra ở {bên trong} Trái Đất, liên quan đến nguồn {năng lượng} bên trong Trái Đất.<br><b>Nguyên nhân:</b> do sự phân huỷ các chất {phóng xạ}, các phản ứng hoá học {toả nhiệt}, chuyển động {tự quay} của Trái Đất và sự sắp xếp vật chất theo {tỉ trọng}.',
+    extra:['bề mặt','bức xạ Mặt Trời','thu nhiệt','khối lượng']});
+};
+function makeFill(root,cfg){
+  const answers=[];const html=cfg.text.replace(/\{([^}]+)\}/g,(m,a)=>{answers.push(a);return `<button class="blank" data-i="${answers.length-1}" aria-label="Ô trống ${answers.length}">&nbsp;</button>`;});
+  root.innerHTML=`<div class="fill">${html}</div><div class="bank"></div><div class="ex-actions"><button class="btn primary" data-act="check">Kiểm tra</button><button class="btn ghost" data-act="reset">Làm lại</button><span class="ex-msg" aria-live="polite"></span></div>`;
+  const bank=$('.bank',root),msg=$('.ex-msg',root);let curB=null;
+  function build(){bank.innerHTML='';shuffle(answers.concat(cfg.extra)).forEach(w=>{const c=document.createElement('button');c.className='chip';c.textContent=w;bank.appendChild(c);});
+    $$('.blank',root).forEach(b=>{b.innerHTML='&nbsp;';b.className='blank';delete b.dataset.v;});msg.textContent='';selFirst();}
+  function selFirst(){const b=$$('.blank',root).find(x=>!x.dataset.v);setCur(b||null);}
+  function setCur(b){$$('.blank',root).forEach(x=>x.classList.remove('cur'));curB=b;if(b)b.classList.add('cur');}
+  root.addEventListener('click',e=>{
+    const act=e.target.closest('[data-act]');if(act){if(act.dataset.act==='reset'){Sound.click();build();}else check();return;}
+    const bl=e.target.closest('.blank');
+    if(bl){if(bl.dataset.v){const w=bl.dataset.v;$$('.chip',bank).find(c=>c.textContent===w&&c.classList.contains('used'))?.classList.remove('used');bl.innerHTML='&nbsp;';bl.className='blank';delete bl.dataset.v;}setCur(bl);Sound.click();return;}
+    const chip=e.target.closest('.bank .chip');
+    if(chip){if(!curB)selFirst();if(!curB)return;if(curB.dataset.v){const w=curB.dataset.v;$$('.chip',bank).find(c=>c.textContent===w&&c.classList.contains('used'))?.classList.remove('used');}
+      curB.textContent=chip.textContent;curB.dataset.v=chip.textContent;curB.className='blank filled';chip.classList.add('used');Sound.pop();selFirst();}
+  });
+  function check(){const bl=$$('.blank',root);if(bl.some(b=>!b.dataset.v)){msg.textContent='Em hãy điền hết các ô trống.';msg.className='ex-msg bad';Sound.wrong();return;}
+    let ok=0;bl.forEach(b=>{const r=b.dataset.v===answers[+b.dataset.i];b.classList.toggle('ok',r);b.classList.toggle('no',!r);if(r)ok++;});
+    Score.set(cfg.key,ok,bl.length);
+    if(ok===bl.length){msg.innerHTML=`Tuyệt vời! ${ok}/${bl.length} <span class="stars">★★★</span>`;msg.className='ex-msg good';Sound.fanfare();confetti();}
+    else{msg.innerHTML=`Đúng ${ok}/${bl.length}. Bấm vào ô đỏ để sửa. <span class="stars">${starStr(ok,bl.length)}</span>`;msg.className='ex-msg bad';Sound.wrong();}}
+  build();
+}
+
+/* 4 simulator */
+inits[4]=()=>{
+  const svg=$('#simSvg'),rng=$('#simRange'),out=$('#simOut'),note=$('#simNote');let mode='v',fault='g',lastR=0;
+  const NOTES={v:'<b>Vận động theo phương thẳng đứng:</b> diễn ra chậm chạp, trên diện tích lớn. Bộ phận này được nâng lên, bộ phận khác bị hạ xuống, gây ra hiện tượng <b>biển tiến</b>, <b>biển thoái</b>.',
+    c:'<b>Uốn nếp:</b> lực nén ép theo phương nằm ngang làm các lớp đá bị uốn cong nhưng không bị phá vỡ tính liên tục, tạo các <b>nếp uốn</b>, nếu cường độ mạnh sẽ tạo thành <b>vùng núi uốn nếp</b>.',
+    t:'<b>Đứt gãy:</b> ở vùng đá cứng, lực tách giãn làm các lớp đá bị gãy, dịch chuyển. Bộ phận trồi lên là <b>địa luỹ</b>, bộ phận sụt xuống là <b>địa hào</b>; đứt gãy sâu có thể tạo <b>hẻm vực</b>.'};
+  const P=(pts)=>pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ');
+  const LAY=['var(--crust-2)','var(--ochre)','var(--crust)','var(--stone)','var(--crust-2)'];
+  const lbl=(x,y,t,c,a)=>`<text x="${x}" y="${y}" text-anchor="${a||'middle'}" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-weight="700" font-size="22" letter-spacing="1" fill="${c||'var(--ink)'}" paint-order="stroke" stroke="var(--sky)" stroke-width="5">${t}</text>`;
+  function draw(){
+    const r=+rng.value/100;let s='';
+    if(mode==='v'){
+      const y=x=>150+x*.13+10*Math.sin(x/55)-r*48;const sea=230;
+      let pts=[];for(let x=0;x<=800;x+=10)pts.push([x,y(x)]);
+      const coast=x0=>{for(let x=0;x<=800;x+=2)if(150+x*.13+10*Math.sin(x/55)-x0*48>=sea)return x;return 800;};
+      const cx=coast(r),c0=coast(0);
+      s+=`<rect width="800" height="340" fill="var(--sky)"/><rect y="${sea}" width="800" height="110" fill="var(--river)" opacity=".75"/>`;
+      s+=`<path d="${P(pts)} L800 340 L0 340Z" fill="var(--crust-2)"/>`;
+      [30,60,90].forEach((o,k)=>{s+=`<path d="${P(pts.map(p=>[p[0],p[1]+o]))}" fill="none" stroke="var(--crust)" stroke-width="${k===2?14:2}" opacity=".7"/>`;});
+      s+=`<line x1="0" x2="800" y1="${sea}" y2="${sea}" stroke="var(--card)" stroke-dasharray="6 6"/>`+lbl(790,sea-8,'Mực nước biển','var(--card)','end').replace('stroke="var(--sky)"','stroke="var(--river)"');
+      s+=`<line x1="${c0}" x2="${c0}" y1="${sea-60}" y2="${sea+10}" stroke="var(--ink)" stroke-width="2" stroke-dasharray="4 4" opacity=".5"/>`;
+      s+=`<circle cx="${cx}" cy="${sea}" r="7" fill="var(--magma)" stroke="var(--card)" stroke-width="2"/>`;
+      if(Math.abs(cx-c0)>6)s+=`<path d="M${c0} ${sea-40} L${cx} ${sea-40}" stroke="var(--magma)" stroke-width="4" marker-end="url(#ah)"/>`;
+      s+=`<defs><marker id="ah" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="var(--magma)"/></marker></defs>`;
+      const ar=r>0?'M120 300 v-50':'M120 250 v50';if(Math.abs(r)>.05)s+=`<path d="${ar}" stroke="var(--magma)" stroke-width="8" marker-end="url(#ah)"/>`;
+      s+=lbl(120,40,r>.05?'Lục địa nâng lên':r<-.05?'Lục địa hạ xuống':'Kéo thanh trượt',"var(--magma)");
+      out.innerHTML=r>.15?'<span class="t-river">Biển thoái</span>: lục địa nâng lên, đường bờ biển lùi ra xa.':r<-.15?'<span class="t-river">Biển tiến</span>: lục địa hạ xuống, nước biển lấn sâu vào đất liền.':'Lục địa ổn định, đường bờ biển chưa thay đổi.';
+    }else if(mode==='c'){
+      const a=Math.max(0,r),A=a*55,lam=300-a*80,sq=1-a*.28;
+      const X=x=>400+(x-400)*sq;
+      s+=`<rect width="800" height="340" fill="var(--sky)"/>`;
+      const bnd=k=>{const p=[];for(let x=-40;x<=840;x+=10){const base=150+k*36;p.push([X(x),base-A*Math.sin(2*Math.PI*(x-60)/lam)*(1-k*.08)]);}return p;};
+      for(let k=0;k<5;k++){const top=bnd(k),bot=bnd(k+1).reverse();s+=`<path d="${P(top.concat(bot))}Z" fill="${LAY[k]}" stroke="var(--ink)" stroke-opacity=".18"/>`;}
+      s+=`<path d="${P(bnd(5))} L${X(840)} 340 L${X(-40)} 340Z" fill="var(--stone)"/>`;
+      const off=(1-sq)*400;
+      s+=`<g fill="var(--magma)"><path d="M${off-90} 210 h60 v-16 l30 26 -30 26 v-16 h-60z"/><path d="M${800-off+90} 210 h-60 v-16 l-30 26 30 26 v-16 h60z"/></g>`;
+      if(a>.35){const cr=X(60+lam/4),tr=X(60+3*lam/4);s+=lbl(cr,150-A-14,'Nếp lồi','var(--magma)')+lbl(tr,150+A-16,'Nếp lõm','var(--river)');}
+      s+=lbl(400,36,a<.05?'Kéo thanh trượt sang phải để nén ép':a<.6?'Các lớp đá uốn cong':'Vùng núi uốn nếp','var(--magma)');
+      out.innerHTML=a<.05?'Các lớp đá nằm ngang, chưa chịu lực nén.':a<.6?'Lực nén ép theo phương nằm ngang làm các lớp đá <span class="t-magma">uốn cong thành nếp uốn</span>.':'Nén ép mạnh: các nếp uốn nhô cao tạo thành <span class="t-magma">vùng núi uốn nếp</span>.';
+    }else{
+      const t=Math.max(0,r);
+      const g=fault==='g';
+      const f1=g?[290,330]:[330,290],f2=g?[510,470]:[470,510];
+      const blocks=[{pts:[[-40,120],[f1[0],120],[f1[1],340],[-40,340]],dx:-t*30,dy:g?0:t*36},
+                    {pts:[[f1[0],120],[f2[0],120],[f2[1],340],[f1[1],340]],dx:0,dy:g?t*62:-t*10},
+                    {pts:[[f2[0],120],[840,120],[840,340],[f2[1],340]],dx:t*30,dy:g?0:t*36}];
+      s+=`<defs><linearGradient id="deep" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--mantle)"/><stop offset="1" stop-color="var(--magma)"/></linearGradient>`;
+      blocks.forEach((b,i)=>{s+=`<clipPath id="cb${i}"><path d="${P(b.pts)}Z"/></clipPath>`;});s+=`</defs>`;
+      s+=`<rect width="800" height="340" fill="var(--sky)"/><rect y="250" width="800" height="90" fill="url(#deep)"/>`;
+      blocks.forEach((b,i)=>{s+=`<g transform="translate(${b.dx.toFixed(1)} ${b.dy.toFixed(1)})"><g clip-path="url(#cb${i})">`;for(let k=0;k<6;k++)s+=`<rect x="-40" y="${120+k*40}" width="880" height="40" fill="${LAY[k%5]}"/>`;s+=`</g><path d="${P(b.pts)}Z" fill="none" stroke="var(--ink)" stroke-width="2" stroke-opacity=".55"/></g>`;});
+      if(t>.05)s+=`<g fill="var(--magma)"><path d="M150 70 h-60 v-14 l-28 24 28 24 v-14 h60z"/><path d="M650 70 h60 v-14 l28 24 -28 24 v-14 h-60z"/></g>`;
+      if(t>.3)s+=g?lbl(400,120+t*62-14,'Địa hào','var(--river)'):lbl(400,120-t*10-40+30,'Địa luỹ','var(--magma)');
+      s+=lbl(400,36,t<.05?'Kéo thanh trượt sang phải để tách giãn':'Lực tách giãn','var(--magma)');
+      out.innerHTML=t<.05?'Khối đá cứng còn nguyên vẹn.':g?'Khối đá ở giữa <span class="t-river">sụt xuống</span> giữa hai đường đứt gãy → <b>địa hào</b>.':'Khối đá ở giữa <span class="t-magma">trồi lên</span> so với hai bên → <b>địa luỹ</b>.';
+    }
+    svg.innerHTML=s;note.innerHTML=NOTES[mode];
+  }
+  function setMode(m){mode=m;$$('#simTabs .tab').forEach(b=>b.setAttribute('aria-selected',b.dataset.mode===m));
+    $('#faultType').hidden=m!=='t';
+    if(m==='v'){rng.min=-100;rng.value=0;$('#simL0').textContent='Hạ xuống';$('#simL1').textContent='Nâng lên';}
+    else{rng.min=0;rng.value=0;$('#simL0').textContent='Yếu';$('#simL1').textContent=m==='c'?'Nén mạnh':'Tách mạnh';}
+    draw();}
+  $('#simTabs').addEventListener('click',e=>{const b=e.target.closest('.tab');if(b){Sound.click();setMode(b.dataset.mode);}});
+  $('#faultType').addEventListener('click',e=>{const b=e.target.closest('.tab');if(b){fault=b.dataset.f;$$('#faultType .tab').forEach(x=>x.setAttribute('aria-selected',x===b));Sound.click();draw();}});
+  rng.addEventListener('input',()=>{draw();const n=performance.now();if(n-lastR>220){lastR=n;Sound.rumble();}});
+  setMode('v');
+};
+
+/* 5 phieu 2 */
+inits[5]=()=>makeSorter($('#sort2'),{key:'sort2',bins:[{id:'v',label:'Theo phương thẳng đứng',cls:'m'},{id:'h',label:'Theo phương nằm ngang',cls:'r'},{id:'x',label:'Xu hướng chung',cls:'o'}],
+  items:[{t:'Bộ phận này nâng lên, bộ phận khác hạ xuống',bin:'v'},{t:'Gây hiện tượng biển tiến, biển thoái',bin:'v'},
+         {t:'Nén ép → uốn nếp, vùng núi uốn nếp',bin:'h'},{t:'Tách giãn → đứt gãy: địa luỹ, địa hào, hẻm vực',bin:'h'},
+         {t:'Làm bề mặt địa hình gồ ghề, cao thấp khác nhau',bin:'x'},{t:'Tạo các dạng địa hình lớn: núi, sơn nguyên, đồng bằng thấp',bin:'x'}]});
+
+/* 6 flip */
+inits[6]=()=>{
+  const Q=[['Vì sao có đỉnh núi nhọn, có đỉnh núi tròn?','Do sự bào mòn mạnh hay yếu của các nhân tố gió, mưa, nước chảy trên mặt.'],
+    ['Vào mùa mưa, trên bề mặt địa hình thường xảy ra những vấn đề gì?','Nước chảy tràn với cường độ khác nhau: lũ quét ở đồi núi khi mưa lớn, lũ lụt ở đồng bằng hạ lưu, nước sông dâng cao gây xói mòn, sạt lở đất.'],
+    ['Giải thích câu nói "Nước chảy đá mòn".','Nước chảy qua một tảng đá trong thời gian dài làm tảng đá mòn dần ở phía tiếp xúc với dòng chảy mạnh hơn.'],
+    ['Cây mọc trên đất đá tác động như thế nào đến bề mặt đất đá?','Rễ cây làm đất đá bị nứt vỡ, thay đổi cấu trúc.'],
+    ['Bề mặt Trái Đất có nhiều hình dạng khác nhau và thường xuyên thay đổi là do đâu?','Do các tác nhân như nhiệt độ, gió, mưa, nước chảy, băng tan, sóng biển và cả con người.']];
+  $('#flips').innerHTML=Q.map((q,i)=>`<button class="flip" aria-pressed="false"><div class="flip-in"><div class="face front"><span class="qn">${i+1}</span><p>${q[0]}</p><span class="tap">Bấm để xem gợi ý</span></div><div class="face back"><span class="qn">${i+1}</span><p>${q[1]}</p><span class="tap">Bấm để lật lại</span></div></div></button>`).join('');
+  $('#flips').addEventListener('click',e=>{const f=e.target.closest('.flip');if(!f)return;f.classList.toggle('on');f.setAttribute('aria-pressed',f.classList.contains('on'));Sound.flip();
+    if(f.classList.contains('on')&&Auto.on)Voice.speak(f.querySelector('.back p').textContent);});
+};
+
+/* 7 rows */
+inits[7]=()=>{
+  const R=[['Khái niệm',['Lực sinh ra trên bề mặt Trái Đất','Lực sinh ra trong lòng Trái Đất','Lực hút của Mặt Trăng'],0],
+    ['Nguồn gốc',['Sự phân huỷ chất phóng xạ','Năng lượng bức xạ Mặt Trời','Chuyển động tự quay của Trái Đất'],1],
+    ['Tác nhân',['Động đất, núi lửa','Dòng đối lưu trong manti','Nhiệt độ, gió, mưa, nước chảy, băng tan, sóng biển, con người'],2],
+    ['Tác động',['Nâng cao địa hình, tạo núi lớn','San bằng bề mặt địa hình, tạo dạng địa hình mới','Làm vỏ Trái Đất uốn nếp'],1],
+    ['Quá trình',['Uốn nếp → đứt gãy','Biển tiến → biển thoái','Phong hoá → bóc mòn → vận chuyển → bồi tụ'],2]];
+  const box=$('#rows7'),msg=$('#msg7');
+  const build=()=>{box.innerHTML=R.map((r,i)=>`<div class="crow" data-r="${i}"><div class="rl">${r[0]}</div><div class="opts">${r[1].map((o,j)=>`<button class="opt" aria-pressed="false" data-j="${j}">${o}</button>`).join('')}</div></div>`).join('');msg.textContent='';};
+  box.addEventListener('click',e=>{const o=e.target.closest('.opt');if(!o)return;$$('.opt',o.parentElement).forEach(x=>{x.setAttribute('aria-pressed',x===o);x.classList.remove('ok','no');});Sound.click();});
+  $('#chk7').onclick=()=>{let ok=0,miss=0;$$('.crow',box).forEach(row=>{const r=R[+row.dataset.r];const p=$('.opt[aria-pressed="true"]',row);if(!p){miss++;return;}const good=+p.dataset.j===r[2];p.classList.add(good?'ok':'no');if(good)ok++;});
+    if(miss){msg.textContent=`Còn ${miss} hàng chưa chọn.`;msg.className='ex-msg bad';Sound.wrong();return;}
+    Score.set('row7',ok,R.length);
+    if(ok===R.length){msg.innerHTML='Hoàn hảo 5/5! <span class="stars">★★★</span>';msg.className='ex-msg good';Sound.fanfare();confetti();}
+    else{msg.innerHTML=`Đúng ${ok}/5. Chọn lại ở hàng màu đỏ. <span class="stars">${starStr(ok,5)}</span>`;msg.className='ex-msg bad';Sound.wrong();}};
+  $('#rst7').onclick=()=>{Sound.click();build();};
+  build();
+};
+
+/* 8 erosion */
+const PINFO=[
+  `<h3 class="t-river">Phong hoá</h3><p>Quá trình <b>phá huỷ và làm biến đổi</b> đá, khoáng vật dưới tác động của các nhân tố ngoại lực, ngay tại chỗ.</p>
+   <div class="weather3"><div><b class="t-magma">Lí học</b>Đá bị vỡ vụn thành nhiều kích thước, không đổi thành phần hoá học. Do nhiệt độ thay đổi đột ngột, nước đóng băng trong khe nứt…</div>
+   <div><b class="t-river">Hoá học</b>Làm biến đổi thành phần hoá học của đá, khoáng vật. Do nước, khí CO₂, O₂, axit hữu cơ… Ví dụ: nước hoà tan đá vôi.</div>
+   <div><b class="t-ochre">Sinh học</b>Đá bị phá huỷ dưới tác động của sinh vật (rễ cây, vi khuẩn, nấm…), cả về cơ giới lẫn hoá học.</div></div>`,
+  `<h3 class="t-river">Bóc mòn</h3><p>Quá trình các tác nhân ngoại lực (nước chảy, gió, băng hà, sóng biển…) <b>lấy đi</b> các sản phẩm phong hoá khỏi vị trí ban đầu.</p>
+   <ul class="clean" style="margin-top:10px"><li><b>Xâm thực</b> do nước chảy: rãnh nông, khe rãnh, thung lũng sông.</li><li><b>Thổi mòn</b> do gió: nấm đá, hố trũng thổi mòn.</li><li><b>Mài mòn</b> do sóng biển, băng hà: hàm ếch sóng vỗ, vách biển.</li></ul>`,
+  `<h3 class="t-river">Vận chuyển</h3><p>Quá trình <b>di chuyển vật liệu</b> do bóc mòn tạo ra đến nơi khác. Vật liệu nhỏ, nhẹ được mang đi xa; vật liệu lớn, nặng lăn hoặc trượt trên mặt dốc.</p>
+   <div class="callout r">Trong mô phỏng: các hạt vật liệu trôi theo dòng sông từ chân núi ra biển.</div>`,
+  `<h3 class="t-river">Bồi tụ</h3><p>Quá trình <b>tích tụ vật liệu</b> do tác nhân ngoại lực vận chuyển đến, góp phần hình thành các dạng địa hình mới.</p>
+   <ul class="clean" style="margin-top:10px"><li>Do nước chảy: bãi bồi, đồng bằng phù sa, đồng bằng châu thổ.</li><li>Do gió: cồn cát, đụn cát.</li><li>Do sóng biển: bãi biển, cồn ven bờ.</li></ul>`];
+inits[8]=()=>{
+  const cv=$('#eroCanvas'),ctx=cv.getContext('2d');let stage=0,parts=[],delta=0,spawn=0,last=performance.now(),C={},cframe=0,rain=[];
+  const setStage=i=>{stage=i;$$('#stageTabs .stab').forEach(b=>b.setAttribute('aria-selected',+b.dataset.s===i));$('#pinfo').innerHTML=PINFO[i];};
+  $('#stageTabs').addEventListener('click',e=>{const b=e.target.closest('.stab');if(b){Sound.pop();setStage(+b.dataset.s);if(Auto.on)Voice.speak($('#pinfo').innerText);}});
+  setStage(0);
+  const PATH=[[150,96],[185,128],[240,192],[300,255],[350,284],[450,296],[560,303],[650,311]];
+  const segLen=[];let total=0;for(let i=1;i<PATH.length;i++){const l=Math.hypot(PATH[i][0]-PATH[i-1][0],PATH[i][1]-PATH[i-1][1]);segLen.push(l);total+=l;}
+  const at=d=>{let acc=0;for(let i=0;i<segLen.length;i++){if(d<=acc+segLen[i]){const f=(d-acc)/segLen[i];return [PATH[i][0]+(PATH[i+1][0]-PATH[i][0])*f,PATH[i][1]+(PATH[i+1][1]-PATH[i][1])*f,i];}acc+=segLen[i];}return [...PATH[PATH.length-1],segLen.length-1];};
+  for(let i=0;i<40;i++)rain.push({x:90+Math.random()*170,y:60+Math.random()*80,v:180+Math.random()*80});
+  function colors(){['--sky','--crust','--crust-2','--stone','--river','--ochre','--ink','--card','--core','--magma','--good'].forEach(k=>C[k]=css(k));}
+  colors();
+  function frame(now){
+    if(cur!==8){requestAnimationFrame(frame);last=now;return;}
+    const dt=Math.min(.05,(now-last)/1000);last=now;if(++cframe%90===0)colors();
+    const s=cv.width/800;ctx.setTransform(s,0,0,s,0,0);
+    ctx.fillStyle=C['--sky'];ctx.fillRect(0,0,800,400);
+    // sun
+    ctx.save();ctx.translate(720,62);ctx.rotate(now/6000);ctx.strokeStyle=C['--ochre'];ctx.lineWidth=4;ctx.lineCap='round';for(let i=0;i<8;i++){ctx.rotate(Math.PI/4);ctx.beginPath();ctx.moveTo(0,34);ctx.lineTo(0,46);ctx.stroke();}ctx.restore();
+    ctx.fillStyle=C['--core'];ctx.beginPath();ctx.arc(720,62,24,0,7);ctx.fill();
+    ctx.fillStyle=C['--ink'];ctx.font='600 13px "Be Vietnam Pro",sans-serif';ctx.textAlign='center';ctx.fillText('Bức xạ Mặt Trời',720,118);
+    // sea
+    ctx.fillStyle=C['--river'];ctx.globalAlpha=.75;ctx.fillRect(600,312,200,90);ctx.globalAlpha=1;
+    // ground
+    ctx.fillStyle=C['--crust-2'];ctx.beginPath();ctx.moveTo(0,400);ctx.lineTo(0,300);ctx.lineTo(50,240);ctx.lineTo(110,130);ctx.lineTo(150,88);ctx.lineTo(190,124);ctx.lineTo(260,210);ctx.lineTo(330,276);ctx.lineTo(420,294);ctx.lineTo(560,300);ctx.lineTo(640,312);ctx.lineTo(800,372);ctx.lineTo(800,400);ctx.closePath();ctx.fill();
+    ctx.fillStyle=C['--crust'];ctx.beginPath();ctx.moveTo(0,400);ctx.lineTo(0,340);ctx.quadraticCurveTo(300,320,560,330);ctx.lineTo(800,392);ctx.lineTo(800,400);ctx.closePath();ctx.fill();
+    // rock cap
+    ctx.fillStyle=C['--stone'];ctx.beginPath();ctx.moveTo(122,118);ctx.lineTo(150,88);ctx.lineTo(178,114);ctx.lineTo(160,124);ctx.lineTo(140,120);ctx.closePath();ctx.fill();
+    ctx.strokeStyle=C['--sky'];ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(150,92);ctx.lineTo(146,104);ctx.lineTo(152,112);ctx.moveTo(138,108);ctx.lineTo(132,116);ctx.moveTo(162,104);ctx.lineTo(168,114);ctx.stroke();
+    // delta
+    const dl=delta;ctx.fillStyle=C['--ochre'];ctx.beginPath();ctx.moveTo(624,312);ctx.quadraticCurveTo(640+dl*.5,306-dl*.03,650+dl,316);ctx.lineTo(660+dl,330);ctx.lineTo(624,330);ctx.closePath();ctx.fill();
+    // river
+    ctx.strokeStyle=C['--river'];ctx.lineWidth=7;ctx.lineCap='round';ctx.lineJoin='round';ctx.beginPath();PATH.slice(3).forEach((p,i)=>i?ctx.lineTo(p[0],p[1]-3):ctx.moveTo(p[0],p[1]-3));ctx.stroke();
+    // cloud + rain
+    ctx.fillStyle=C['--card'];[[150,48,40],[118,54,26],[186,54,28],[160,36,26]].forEach(c=>{ctx.beginPath();ctx.arc(c[0],c[1],c[2],0,7);ctx.fill();});
+    ctx.strokeStyle=C['--river'];ctx.lineWidth=2;rain.forEach(d=>{d.y+=d.v*dt;if(d.y>200)d.y=70;ctx.beginPath();ctx.moveTo(d.x,d.y);ctx.lineTo(d.x-2,d.y+8);ctx.stroke();});
+    // particles
+    spawn-=dt;if(spawn<=0){spawn=.28;parts.push({d:Math.random()*20,w:1.1+Math.random()*.6,r:2+Math.random()*2.6,o:(Math.random()-.5)*6});}
+    parts.forEach(p=>{if(p.w>0){p.w-=dt;}else{const seg=at(p.d)[2];p.d+=dt*(seg<3?75:48);}});
+    parts=parts.filter(p=>{if(p.d>=total){delta=Math.min(110,delta+.55);return false;}return true;});
+    if(delta>=110)delta=40;
+    parts.forEach(p=>{const q=at(p.d);let x=q[0],y=q[1]-3+p.o*.4;if(p.w>0){x+=Math.sin(now/40+p.o)*1.2;}else if(q[2]>=3){y+=Math.sin(now/200+p.o)*1.5;}
+      ctx.fillStyle=p.w>0?C['--stone']:q[2]>=3?C['--ochre']:C['--stone'];ctx.beginPath();ctx.arc(x,y,p.r,0,7);ctx.fill();});
+    // highlight ring
+    const H=[[150,104,46,'Phong hoá'],[230,190,62,'Bóc mòn'],[470,298,84,'Vận chuyển'],[660,318,56,'Bồi tụ']][stage];
+    ctx.save();ctx.strokeStyle=C['--magma'];ctx.lineWidth=3;ctx.setLineDash([8,6]);ctx.lineDashOffset=-now/40;ctx.beginPath();ctx.arc(H[0],H[1],H[2]+Math.sin(now/300)*3,0,7);ctx.stroke();ctx.restore();
+    ctx.font='700 22px "Barlow Condensed","Arial Narrow",sans-serif';ctx.textAlign='center';ctx.lineWidth=5;ctx.strokeStyle=C['--sky'];ctx.fillStyle=C['--magma'];
+    const ty=H[1]-H[2]-10<20?H[1]+H[2]+24:H[1]-H[2]-10;ctx.strokeText(H[3].toUpperCase(),H[0],ty);ctx.fillText(H[3].toUpperCase(),H[0],ty);
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+  // timer
+  let left=600,iv=null;const clk=$('#clock'),fmt=()=>{clk.textContent=String(Math.floor(left/60)).padStart(2,'0')+':'+String(left%60).padStart(2,'0');clk.classList.toggle('urgent',left<=60);};
+  $('#tStart').onclick=e=>{if(iv){clearInterval(iv);iv=null;e.target.textContent='Tiếp tục';return;}Sound.click();e.target.textContent='Tạm dừng';iv=setInterval(()=>{left--;fmt();if(left<=10&&left>0)Sound.tick();if(left<=0){clearInterval(iv);iv=null;$('#tStart').textContent='Bắt đầu';left=0;fmt();Sound.alarm();toast('Hết giờ! Các nhóm chuẩn bị trình bày.');}},1000);};
+  $('#tReset').onclick=()=>{clearInterval(iv);iv=null;left=600;fmt();$('#tStart').textContent='Bắt đầu';Sound.click();};
+};
+
+/* 9 order + balance */
+inits[9]=()=>{
+  const ORD=['Phong hoá','Bóc mòn','Vận chuyển','Bồi tụ'];let picks=[];
+  const box=$('#order'),msg=$('#msgO');
+  const build=()=>{picks=[];box.innerHTML=shuffle(ORD.slice()).map(t=>`<button class="ocard" data-t="${t}"><span class="num"></span>${t}</button>`).join('');msg.textContent='';};
+  box.addEventListener('click',e=>{const c=e.target.closest('.ocard');if(!c)return;const i=picks.indexOf(c.dataset.t);
+    if(i>-1){picks.splice(i,1);}else picks.push(c.dataset.t);
+    $$('.ocard',box).forEach(x=>{const k=picks.indexOf(x.dataset.t);x.classList.toggle('picked',k>-1);x.classList.remove('ok','no');$('.num',x).textContent=k>-1?k+1:'';});Sound.pop();});
+  $('#chkO').onclick=()=>{if(picks.length<4){msg.textContent='Em hãy đánh số cả 4 thẻ.';msg.className='ex-msg bad';Sound.wrong();return;}
+    let ok=0;$$('.ocard',box).forEach(x=>{const good=picks.indexOf(x.dataset.t)===ORD.indexOf(x.dataset.t);x.classList.add(good?'ok':'no');if(good)ok++;});
+    Score.set('order',ok,4);
+    if(ok===4){msg.innerHTML='Đúng thứ tự! Các quá trình diễn ra liên tục, kế tiếp nhau. <span class="stars">★★★</span>';msg.className='ex-msg good';Sound.fanfare();confetti();}
+    else{msg.innerHTML=`Đúng ${ok}/4 vị trí. Hãy nghĩ: vật liệu phải được tạo ra trước khi bị mang đi. <span class="stars">${starStr(ok,4)}</span>`;msg.className='ex-msg bad';Sound.wrong();}};
+  $('#rstO').onclick=()=>{Sound.click();build();};
+  build();
+  const bs=$('#balSvg'),br=$('#balRange');
+  const drawB=()=>{const v=+br.value/100;let p='M0 170 L0 120 ';for(let x=0;x<=400;x+=5){const y=120-(18+v*60)*Math.abs(Math.sin(x/38))*(.6+.4*Math.sin(x/90))-v*30*Math.max(0,Math.sin(x/70));p+=`L${x} ${y.toFixed(1)} `;}p+='L400 170Z';
+    bs.innerHTML=`<rect width="400" height="170" fill="var(--sky)"/><path d="${p}" fill="var(--crust-2)"/><path d="M0 170 V150 H400 V170Z" fill="var(--crust)"/>`+
+      `<g fill="var(--magma)" opacity="${(.25+v*.75).toFixed(2)}"><path d="M60 168 l-10 14 h6 v10 h8 v-10 h6z" transform="translate(0 -24)"/><path d="M200 168 l-10 14 h6 v10 h8 v-10 h6z" transform="translate(0 -24)"/><path d="M340 168 l-10 14 h6 v10 h8 v-10 h6z" transform="translate(0 -24)"/></g>`+
+      `<g stroke="var(--river)" stroke-width="2.5" stroke-linecap="round" opacity="${(1-v*.75).toFixed(2)}"><path d="M40 6v14M110 10v14M180 4v14M250 10v14M320 6v14M380 10v14"/></g>`;
+    $('#balOut').textContent=v>.65?'Nội lực chiếm ưu thế: địa hình được nâng cao, gồ ghề, nhiều núi cao.':v<.35?'Ngoại lực chiếm ưu thế: địa hình bị bào mòn, san bằng, thấp và thoải dần.':'Hai lực cân bằng: địa hình vừa được nâng lên vừa bị bào mòn.';};
+  let lb=0;br.addEventListener('input',()=>{drawB();const n=performance.now();if(n-lb>150){lb=n;Sound.tick();}});drawB();
+};
+
+/* 10 wheel */
+inits[10]=()=>{
+  const cv=$('#wheel'),ctx=cv.getContext('2d');let ang=0,spinning=false;
+  const N=()=>Math.max(2,Math.min(60,parseInt($('#wN').value)||35));
+  function draw(){const n=N(),R=400,cx=420,cy=420,seg=2*Math.PI/n;ctx.clearRect(0,0,840,840);
+    const fills=[css('--magma-soft'),css('--river-soft'),css('--ochre-soft'),css('--paper-2')],ink=css('--ink');
+    for(let i=0;i<n;i++){const a0=ang+i*seg-Math.PI/2;ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,R,a0,a0+seg);ctx.closePath();ctx.fillStyle=fills[i%4];ctx.fill();ctx.strokeStyle=css('--card');ctx.lineWidth=2;ctx.stroke();
+      ctx.save();ctx.translate(cx,cy);ctx.rotate(a0+seg/2);ctx.fillStyle=ink;ctx.font=`700 ${n>40?24:n>25?30:38}px "Barlow Condensed","Arial Narrow",sans-serif`;ctx.textAlign='right';ctx.textBaseline='middle';ctx.fillText(i+1,R-18,0);ctx.restore();}
+    ctx.beginPath();ctx.arc(cx,cy,R,0,7);ctx.lineWidth=8;ctx.strokeStyle=ink;ctx.stroke();
+    ctx.beginPath();ctx.arc(cx,cy,56,0,7);ctx.fillStyle=css('--magma');ctx.fill();ctx.fillStyle='#fff';ctx.font='800 34px "Barlow Condensed",sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('QUAY',cx,cy+2);}
+  draw();$('#wN').addEventListener('input',()=>{if(!spinning)draw();});
+  document.addEventListener('slide',e=>{if(e.detail===10&&!spinning)draw();});
+  const spin=()=>{if(spinning)return;Sound.init();spinning=true;$('#winner').textContent='…';const n=N(),seg=2*Math.PI/n;const start=ang,target=start+Math.PI*2*(5+Math.random()*3)+Math.random()*Math.PI*2,dur=5200,t0=performance.now();let lastSeg=Math.floor(start/seg);
+    const step=now=>{const t=Math.min(1,(now-t0)/dur),e=1-Math.pow(1-t,4);ang=start+(target-start)*e;const sg=Math.floor(ang/seg);if(sg!==lastSeg){lastSeg=sg;Sound.tick();}draw();
+      if(t<1)requestAnimationFrame(step);else{spinning=false;const a=((-ang)%(2*Math.PI)+2*Math.PI)%(2*Math.PI);const idx=Math.floor(a/seg)%n;$('#winner').textContent=idx+1;Sound.fanfare();confetti();if(Auto.on)Voice.speak('Mời học sinh số '+(idx+1)+' trả lời.');}};
+    requestAnimationFrame(step);};
+  $('#wSpin').onclick=spin;cv.addEventListener('click',spin);
+};
+
+/* 11 quiz */
+const QZ=[
+ ['Nội lực là lực sinh ra ở đâu?',['Trên bề mặt Trái Đất','Bên trong Trái Đất','Trong lớp khí quyển','Từ Mặt Trời'],1,'Nội lực là lực sinh ra trong lòng Trái Đất, liên quan đến nguồn năng lượng bên trong Trái Đất.'],
+ ['Nguồn năng lượng chủ yếu sinh ra ngoại lực là',['sự phân huỷ chất phóng xạ','chuyển động tự quay của Trái Đất','bức xạ Mặt Trời','phản ứng hoá học trong lòng đất'],2,'Năng lượng của các tác nhân ngoại lực đều trực tiếp hay gián tiếp liên quan đến bức xạ Mặt Trời.'],
+ ['Ý nào KHÔNG phải là nguồn gốc của nội lực?',['Sự phân huỷ các chất phóng xạ','Sự sắp xếp vật chất theo tỉ trọng','Bức xạ Mặt Trời','Chuyển động tự quay của Trái Đất'],2,'Bức xạ Mặt Trời là nguồn năng lượng của ngoại lực.'],
+ ['Hiện tượng biển tiến, biển thoái là kết quả của',['vận động theo phương nằm ngang','vận động theo phương thẳng đứng','quá trình phong hoá','quá trình bồi tụ'],1,'Vận động thẳng đứng làm bộ phận này nâng lên, bộ phận khác hạ xuống, gây biển tiến, biển thoái.'],
+ ['Các lớp đá bị nén ép theo phương nằm ngang, uốn cong nhưng không bị phá vỡ tính liên tục sẽ tạo thành',['địa hào','địa luỹ','nếp uốn','hẻm vực'],2,'Nén ép theo phương nằm ngang tạo ra các nếp uốn; cường độ mạnh tạo vùng núi uốn nếp.'],
+ ['Bộ phận đá sụt xuống giữa hai đường đứt gãy được gọi là',['địa hào','địa luỹ','nếp lồi','đồng bằng châu thổ'],0,'Phần sụt xuống là địa hào; phần trồi lên là địa luỹ.'],
+ ['Quá trình phá huỷ và làm biến đổi đá, khoáng vật dưới tác động của các nhân tố ngoại lực gọi là',['bóc mòn','phong hoá','vận chuyển','bồi tụ'],1,'Phong hoá gồm phong hoá lí học, hoá học và sinh học.'],
+ ['Rễ cây len vào khe nứt làm đá vỡ ra thuộc loại phong hoá nào?',['Phong hoá lí học','Phong hoá hoá học','Phong hoá sinh học','Không phải phong hoá'],2,'Phong hoá sinh học là sự phá huỷ đá dưới tác động của sinh vật như rễ cây, vi khuẩn, nấm.'],
+ ['Trong 4 quá trình ngoại lực, hai quá trình nào trực tiếp làm thay đổi địa hình bề mặt Trái Đất?',['Phong hoá và vận chuyển','Bóc mòn và bồi tụ','Phong hoá và bồi tụ','Vận chuyển và bóc mòn'],1,'Bóc mòn và bồi tụ là hai quá trình trực tiếp tạo nên các dạng địa hình.'],
+ ['Đồng bằng châu thổ sông Hồng được hình thành chủ yếu do quá trình',['phong hoá','bóc mòn','bồi tụ','uốn nếp'],2,'Phù sa do sông vận chuyển đến được tích tụ ở vùng cửa sông, tạo thành đồng bằng châu thổ.']];
+inits[11]=()=>{
+  const box=$('#quiz');let order=[],qi=0,score=0,tmr=null;const TL=20;
+  function start(){order=shuffle(QZ.map((_,i)=>i));qi=0;score=0;show();}
+  function show(){clearInterval(tmr);const q=QZ[order[qi]];
+    box.innerHTML=`<div class="qtop"><span>Câu ${qi+1}/${QZ.length}</span><span id="qt">${TL}s</span><span>Điểm: ${score}</span></div><div class="qbar"><i id="qb"></i></div>
+      <p class="qq">${q[0]}</p><div class="qopts">${q[1].map((o,j)=>`<button class="qopt" data-j="${j}"><span class="L">${'ABCD'[j]}</span><span>${o}</span></button>`).join('')}</div><div class="qex" id="qex"></div>`;
+    if(Auto.on)Voice.speak(q[0]+'. '+q[1].map((o,j)=>'ABCD'[j]+'. '+o).join('. '));
+    let left=TL;const bar=$('#qb');bar.style.transition='none';bar.style.transform='scaleX(1)';requestAnimationFrame(()=>{bar.style.transition=`transform ${TL}s linear`;bar.style.transform='scaleX(0)';});
+    tmr=setInterval(()=>{if(cur!==11)return;left--;const t=$('#qt');if(t)t.textContent=left+'s';if(left<=5&&left>0)Sound.tick();if(left<=0)answer(-1);},1000);
+    $$('.qopt',box).forEach(b=>b.onclick=()=>answer(+b.dataset.j));}
+  function answer(j){clearInterval(tmr);const q=QZ[order[qi]];const bar=$('#qb');const w=getComputedStyle(bar).transform;bar.style.transition='none';bar.style.transform=w;
+    $$('.qopt',box).forEach(b=>{b.disabled=true;const k=+b.dataset.j;if(k===q[2])b.classList.add('ok');else if(k===j)b.classList.add('no');});
+    const good=j===q[2];if(good){score++;Sound.correct();}else Sound.wrong();
+    $('#qex').innerHTML=`<div class="callout ${good?'r':'m'}"><b>${good?'Chính xác!':j<0?'Hết giờ!':'Chưa đúng.'}</b> ${q[3]}</div><div class="ex-actions"><button class="btn primary" id="qnext">${qi<QZ.length-1?'Câu tiếp theo':'Xem kết quả'}</button></div>`;
+    $('.qtop span:last-child',box).textContent='Điểm: '+score;
+    $('#qnext').onclick=()=>{qi++;if(qi<QZ.length){Sound.click();show();}else end();};}
+  function end(){Score.set('quiz',score,QZ.length);const pct=score/QZ.length;
+    box.innerHTML=`<div class="panel qend"><p class="eyebrow">Kết quả</p><div class="big ${pct>=.8?'t-river':pct>=.5?'t-ochre':'t-magma'}">${score}/${QZ.length}</div><p class="stars" style="font-size:34px">${starStr(score,QZ.length)}</p>
+      <p style="font-size:18px;margin-top:8px">${pct===1?'Xuất sắc! Em đã nắm vững toàn bộ bài học.':pct>=.8?'Rất tốt! Chỉ còn một chút nữa là hoàn hảo.':pct>=.5?'Khá! Em hãy xem lại phần còn chưa chắc.':'Em hãy ôn lại các trang mô phỏng rồi thử lại nhé.'}</p>
+      <div class="ex-actions" style="justify-content:center"><button class="btn primary" id="qagain">Làm lại</button><button class="btn ghost" id="qgo">Sang phần Vận dụng</button></div></div>`;
+    if(pct>=.7){Sound.fanfare();confetti();}else Sound.wrong();
+    $('#qagain').onclick=()=>{Sound.click();start();};$('#qgo').onclick=()=>go(12);}
+  start();
+};
+
+/* 12 apply */
+inits[12]=()=>{
+  ['ans12','local12'].forEach(id=>{const el=$('#'+id);el.value=store.get(id,'');el.addEventListener('input',()=>store.set(id,el.value));});
+  $('#show12').onclick=()=>{const k=$('#key12');k.hidden=!k.hidden;$('#show12').textContent=k.hidden?'Xem gợi ý đáp án':'Ẩn gợi ý';Sound.flip();if(!k.hidden&&Auto.on)Voice.speak(k.innerText);};
+};
+
+/* 13 results */
+function renderResults(){const box=$('#results');if(!box)return;
+  box.innerHTML=SCORE_KEYS.map(([k,l])=>{const r=Score.d[k];return `<div class="res"><b>${l}</b><span>${r?`${r.got}/${r.tot} <span class="stars">${starStr(r.got,r.tot)}</span>`:'<span class="hint">Chưa làm</span>'}</span></div>`;}).join('');
+  const st=Score.stars(),max=SCORE_KEYS.length*3;$('#resMsg').innerHTML=`Tổng: <span class="stars">${st}/${max} ★</span> — ${st>=max-2?'Em là chuyên gia địa hình!':st>=max/2?'Làm tốt lắm, tiếp tục phát huy!':'Hãy hoàn thành các bài tập còn lại để nhận thêm sao.'}`;}
+inits[13]=()=>{renderResults();};
+document.addEventListener('slide',e=>{if(e.detail===13){renderResults();setTimeout(()=>{Sound.fanfare();confetti();},400);}});
+
+/* ---------- CONFETTI ---------- */
+const cf=$('#confetti'),cc=cf.getContext('2d');let bits=[],cfRun=false;
+function confetti(){if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;cf.width=innerWidth;cf.height=innerHeight;const cols=[css('--magma'),css('--river'),css('--ochre'),css('--good'),css('--core')];
+  for(let i=0;i<140;i++)bits.push({x:innerWidth/2+(Math.random()-.5)*200,y:innerHeight*.35,vx:(Math.random()-.5)*14,vy:-Math.random()*14-4,r:Math.random()*Math.PI,vr:(Math.random()-.5)*.4,w:6+Math.random()*6,h:4+Math.random()*4,c:cols[i%5],life:1});
+  if(!cfRun){cfRun=true;requestAnimationFrame(cfStep);}}
+function cfStep(){cc.clearRect(0,0,cf.width,cf.height);bits.forEach(b=>{b.vy+=.35;b.vx*=.99;b.x+=b.vx;b.y+=b.vy;b.r+=b.vr;b.life-=.007;cc.save();cc.globalAlpha=Math.max(0,b.life);cc.translate(b.x,b.y);cc.rotate(b.r);cc.fillStyle=b.c;cc.fillRect(-b.w/2,-b.h/2,b.w,b.h);cc.restore();});
+  bits=bits.filter(b=>b.life>0&&b.y<cf.height+40);if(bits.length)requestAnimationFrame(cfStep);else{cfRun=false;cc.clearRect(0,0,cf.width,cf.height);}}
+
+/* ---------- BOOT ---------- */
+const startAt=Math.min(slides.length-1,Math.max(0,+store.get('cur',0)||0));
+go(startAt,true);
+})();
+</script>
+
+</body>
+</html>
